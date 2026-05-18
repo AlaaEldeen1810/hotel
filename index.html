@@ -6,6 +6,7 @@
 <title>🏨 نظام الفندق</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
   :root {
     --navy: #0f2444;
@@ -435,16 +436,7 @@
     font-size: 13px; font-weight: 800; color: var(--navy);
     margin-bottom: 14px; display: flex; align-items: center; gap: 6px;
   }
-  .bar-chart { display: flex; align-items: flex-end; gap: 4px; height: 120px; padding-bottom: 20px; position: relative; }
-  .bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; }
-  .bar {
-    width: 100%; border-radius: 6px 6px 0 0;
-    transition: height .4s ease; min-height: 2px;
-    cursor: pointer; position: relative;
-  }
-  .bar:hover { opacity: 0.85; }
-  .bar-label { font-size: 9px; color: var(--muted); margin-top: 4px; text-align: center; font-weight: 600; }
-  .bar-val { font-size: 8px; color: var(--navy); font-weight: 800; margin-bottom: 2px; }
+  .canvas-wrap { position: relative; width: 100%; height: 260px; }
 
   .kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
   .kpi-card {
@@ -1489,24 +1481,21 @@ function calcTotal(b) {
 function renderReports() {
   const filtered  = getFilteredBookings();
   const allActive = bookings.filter(b => b.status !== 'ملغي ❌');
-  const now       = new Date();
-  const year      = now.getFullYear();
-  const month     = now.getMonth();
+  const now    = new Date();
+  const year   = now.getFullYear();
+  const month  = now.getMonth();
 
   // KPIs
-  const totalRev    = filtered.reduce((s,b) => s + calcTotal(b), 0);
-  const totalDep    = filtered.reduce((s,b) => s + Number(b.deposit||0), 0);
-  const totalBal    = filtered.reduce((s,b) => s + Math.max(0, calcTotal(b) - Number(b.deposit||0)), 0);
-  const confirmed   = filtered.filter(b => b.status === 'مؤكد ✅').length;
-  const avgRevPerB  = filtered.length ? Math.round(totalRev / filtered.length) : 0;
-  const totalNights = filtered.reduce((s,b) => {
-    return s + Math.max(0, (new Date(b.checkout) - new Date(b.checkin)) / 86400000);
-  }, 0);
+  const totalRev   = filtered.reduce((s,b) => s + calcTotal(b), 0);
+  const totalDep   = filtered.reduce((s,b) => s + Number(b.deposit||0), 0);
+  const totalBal   = filtered.reduce((s,b) => s + Math.max(0, calcTotal(b) - Number(b.deposit||0)), 0);
+  const confirmed  = filtered.filter(b => b.status === 'مؤكد ✅').length;
+  const avgRevPerB = filtered.length ? Math.round(totalRev / filtered.length) : 0;
+  const totalNights = filtered.reduce((s,b) => s + Math.max(0,(new Date(b.checkout)-new Date(b.checkin))/86400000), 0);
 
   // Occupancy per room type
   const daysInPeriod = reportPeriod === 'month' ? new Date(year, month+1, 0).getDate()
-    : reportPeriod === 'quarter' ? 91
-    : reportPeriod === 'year' ? 365 : 365;
+    : reportPeriod === 'quarter' ? 91 : reportPeriod === 'year' ? 365 : 365;
 
   const occByType = {};
   ROOM_TYPES_ORDER.forEach(rt => {
@@ -1515,44 +1504,36 @@ function renderReports() {
     const totalDays = typeRooms.length * daysInPeriod;
     const occupied  = filtered.filter(b => b.rtype === rt)
       .reduce((s,b) => s + Math.max(0,(new Date(b.checkout)-new Date(b.checkin))/86400000), 0);
-    occByType[rt] = { pct: Math.min(100, Math.round(occupied/totalDays*100)), count: typeRooms.length, nights: occupied };
+    occByType[rt] = { pct: Math.min(100, Math.round(occupied/totalDays*100)), count: typeRooms.length };
   });
 
-  // Revenue by month (last 6)
+  // Monthly revenue last 6 months
   const monthlyRev = [];
   for (let i = 5; i >= 0; i--) {
-    const d  = new Date(year, month - i, 1);
-    const m  = d.getMonth();
-    const y  = d.getFullYear();
+    const d   = new Date(year, month - i, 1);
+    const m   = d.getMonth(), y = d.getFullYear();
     const rev = allActive.filter(b => {
       const bd = new Date(b.checkin);
       return bd.getFullYear() === y && bd.getMonth() === m;
     }).reduce((s,b) => s + calcTotal(b), 0);
-    monthlyRev.push({ label: MONTHS[m].slice(0,3), rev, m, y });
+    monthlyRev.push({ label: MONTHS[m].slice(0,3), rev, current: i === 0 });
   }
 
-  const maxRev = Math.max(...monthlyRev.map(x => x.rev), 1);
-
-  // Top rooms by revenue
+  // Top rooms
   const roomRev = {};
-  filtered.forEach(b => {
-    roomRev[b.rno] = (roomRev[b.rno] || 0) + calcTotal(b);
-  });
-  const topRooms = Object.entries(roomRev)
-    .sort((a,b) => b[1]-a[1]).slice(0,5);
+  filtered.forEach(b => { roomRev[b.rno] = (roomRev[b.rno]||0) + calcTotal(b); });
+  const topRooms = Object.entries(roomRev).sort((a,b)=>b[1]-a[1]).slice(0,5);
 
   // Status breakdown
-  const statuses = ['مؤكد ✅','انتظار ⏳','تسجيل خروج 🔑','مكتمل ✔️'];
+  const statuses  = ['مؤكد ✅','انتظار ⏳','تسجيل خروج 🔑','مكتمل ✔️'];
   const statusData = statuses.map(s => ({
-    label: s,
-    count: filtered.filter(b => b.status === s).length,
-    ...( STATUS_STYLE[s] || {bg:'#eee',fg:'#333'} )
-  }));
+    label: s, count: filtered.filter(b => b.status === s).length,
+    ...(STATUS_STYLE[s] || {bg:'#eee', fg:'#333'})
+  })).filter(s => s.count > 0);
 
-  const rankColors = ['#f59e0b','#94a3b8','#b45309'];
+  const rankColors = ['#f59e0b','#94a3b8','#b45309','#64748b','#a3a3a3'];
 
-  const html = `
-  <!-- KPIs -->
+  document.getElementById('reportsContent').innerHTML = `
   <div class="kpi-grid">
     <div class="kpi-card gold">
       <div class="kpi-icon">💰</div>
@@ -1570,7 +1551,7 @@ function renderReports() {
       <div class="kpi-icon">🌙</div>
       <div class="kpi-val">${Math.round(totalNights)}</div>
       <div class="kpi-label">إجمالي الليالي</div>
-      <div class="kpi-sub">متوسط ${filtered.length ? (totalNights/filtered.length).toFixed(1) : 0} ليلة/حجز</div>
+      <div class="kpi-sub">متوسط ${filtered.length?(totalNights/filtered.length).toFixed(1):0} ليلة/حجز</div>
     </div>
     <div class="kpi-card purple">
       <div class="kpi-icon">📈</div>
@@ -1578,7 +1559,7 @@ function renderReports() {
       <div class="kpi-label">متوسط الحجز</div>
       <div class="kpi-sub">ج.م</div>
     </div>
-    <div class="kpi-card green" style="border-top-color:#16a34a">
+    <div class="kpi-card green">
       <div class="kpi-icon">✅</div>
       <div class="kpi-val">${(totalDep/1000).toFixed(1)}K</div>
       <div class="kpi-label">محصّل</div>
@@ -1592,75 +1573,176 @@ function renderReports() {
     </div>
   </div>
 
-  <!-- Monthly Revenue Chart -->
   <div class="chart-wrap">
     <div class="chart-title">📊 الإيرادات — آخر 6 شهور</div>
-    <div class="bar-chart">
-      ${monthlyRev.map(m => {
-        const h = Math.round((m.rev / maxRev) * 100);
-        const isCurrentMonth = m.m === month && m.y === year;
-        const color = isCurrentMonth ? 'var(--gold)' : 'var(--navy2)';
-        return `<div class="bar-wrap">
-          <div class="bar-val">${m.rev > 0 ? (m.rev/1000).toFixed(0)+'K' : ''}</div>
-          <div class="bar" style="height:${h}%;background:${color};opacity:${isCurrentMonth?1:0.65}"></div>
-          <div class="bar-label">${m.label}</div>
-        </div>`;
-      }).join('')}
-    </div>
+    <div class="canvas-wrap"><canvas id="revenueChart"></canvas></div>
   </div>
 
-  <!-- Occupancy by Room Type -->
   <div class="chart-wrap">
     <div class="chart-title">🏠 نسبة الإشغال حسب نوع الغرفة</div>
-    ${Object.entries(occByType).filter(([,v]) => v.count > 0).map(([rt, data]) => {
-      const color = ROOM_TYPE_COLORS[rt] || 'var(--blue)';
-      const pct   = data.pct;
-      return `<div class="occ-row">
-        <div class="occ-name">${rt.replace('غرفة ','').replace('جناح ','ج.')}</div>
-        <div class="occ-bar-bg">
-          <div class="occ-bar-fill" style="width:${pct}%;background:${color}"></div>
-        </div>
-        <div class="occ-pct" style="color:${pct>=70?'var(--green)':pct>=40?'var(--orange)':'var(--muted)'}">${pct}%</div>
-      </div>`;
-    }).join('') || '<div style="color:var(--muted);font-size:13px;text-align:center;padding:10px">لا توجد بيانات</div>'}
+    <div class="canvas-wrap" style="height:220px"><canvas id="occupancyChart"></canvas></div>
   </div>
 
-  <!-- Top Rooms -->
   ${topRooms.length ? `
   <div class="chart-wrap">
     <div class="chart-title">🏆 أعلى غرف في الإيرادات</div>
-    <div class="top-rooms-list">
-      ${topRooms.map(([rno, rev], i) => {
-        const room = rooms.find(r => r.rno === rno);
-        const bg   = rankColors[i] || 'var(--muted)';
-        return `<div class="top-room-item">
-          <div class="rank-badge" style="background:${bg}">${i+1}</div>
-          <div style="flex:1">
-            <div style="font-size:13px;font-weight:800;color:var(--navy)">غرفة ${rno}</div>
-            <div style="font-size:11px;color:var(--muted)">${room?.rtype || ''}</div>
-          </div>
-          <div style="font-size:14px;font-weight:900;color:var(--navy)">${(rev/1000).toFixed(1)}K ج.م</div>
-        </div>`;
-      }).join('')}
-    </div>
+    <div class="canvas-wrap" style="height:220px"><canvas id="topRoomsChart"></canvas></div>
   </div>` : ''}
 
-  <!-- Status Breakdown -->
+  ${statusData.length ? `
   <div class="chart-wrap">
-    <div class="chart-title">📌 توزيع الحجوزات</div>
-    ${statusData.filter(s => s.count > 0).map(s => `
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
-        <span style="font-size:13px;font-weight:700;color:var(--text)">${s.label}</span>
-        <div style="display:flex;align-items:center;gap:8px">
-          <div style="width:${filtered.length ? Math.round(s.count/filtered.length*80) : 0}px;height:8px;background:${s.bg};border-radius:4px;border:1px solid ${s.fg}22"></div>
-          <span style="font-size:13px;font-weight:900;color:${s.fg};min-width:24px;text-align:center">${s.count}</span>
-        </div>
-      </div>`).join('')}
-    ${!statusData.some(s=>s.count>0) ? '<div style="color:var(--muted);font-size:13px;text-align:center;padding:10px">لا توجد حجوزات في هذه الفترة</div>' : ''}
-  </div>
+    <div class="chart-title">📌 توزيع الحجوزات حسب الحالة</div>
+    <div style="display:flex;align-items:center;gap:16px">
+      <div class="canvas-wrap" style="height:220px;width:220px;flex-shrink:0"><canvas id="statusChart"></canvas></div>
+      <div style="flex:1">
+        ${statusData.map(s=>`
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+          <div style="width:12px;height:12px;border-radius:3px;background:${s.bg};border:1px solid ${s.fg}44;flex-shrink:0"></div>
+          <span style="font-size:12px;font-weight:700;flex:1">${s.label}</span>
+          <span style="font-size:14px;font-weight:900;color:${s.fg}">${s.count}</span>
+        </div>`).join('')}
+      </div>
+    </div>
+  </div>` : ''}
   `;
 
-  document.getElementById('reportsContent').innerHTML = html;
+  // Destroy old charts
+  ['revenueChart','occupancyChart','topRoomsChart','statusChart'].forEach(id => {
+    const existing = Chart.getChart(id);
+    if (existing) existing.destroy();
+  });
+
+  Chart.defaults.font.family = 'Cairo';
+  Chart.defaults.color = '#64748b';
+
+  // ── Revenue Bar Chart ──
+  const revCtx = document.getElementById('revenueChart');
+  if (revCtx) {
+    new Chart(revCtx, {
+      type: 'bar',
+      data: {
+        labels: monthlyRev.map(m => m.label),
+        datasets: [{
+          label: 'الإيرادات (ج.م)',
+          data: monthlyRev.map(m => m.rev),
+          backgroundColor: monthlyRev.map(m => m.current ? '#c9a84c' : 'rgba(26,58,107,0.7)'),
+          borderColor:     monthlyRev.map(m => m.current ? '#e8c76a' : '#1a3a6b'),
+          borderWidth: 2,
+          borderRadius: 8,
+          borderSkipped: false,
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: ctx => `  ${ctx.parsed.y.toLocaleString('ar-EG')} ج.م`
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: { color: 'rgba(0,0,0,0.05)' },
+            ticks: { callback: v => (v/1000).toFixed(0)+'K' }
+          },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+  }
+
+  // ── Occupancy Horizontal Bar ──
+  const occEntries = Object.entries(occByType).filter(([,v]) => v.count > 0);
+  const occCtx = document.getElementById('occupancyChart');
+  if (occCtx && occEntries.length) {
+    new Chart(occCtx, {
+      type: 'bar',
+      data: {
+        labels: occEntries.map(([rt]) => rt),
+        datasets: [{
+          label: 'نسبة الإشغال %',
+          data: occEntries.map(([,v]) => v.pct),
+          backgroundColor: occEntries.map(([rt]) => ROOM_TYPE_COLORS[rt] || '#2e7dd6'),
+          borderRadius: 6,
+          borderSkipped: false,
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: ctx => `  ${ctx.parsed.x}%` } }
+        },
+        scales: {
+          x: {
+            beginAtZero: true, max: 100,
+            grid: { color: 'rgba(0,0,0,0.05)' },
+            ticks: { callback: v => v+'%' }
+          },
+          y: { grid: { display: false } }
+        }
+      }
+    });
+  }
+
+  // ── Top Rooms Bar ──
+  const topCtx = document.getElementById('topRoomsChart');
+  if (topCtx && topRooms.length) {
+    new Chart(topCtx, {
+      type: 'bar',
+      data: {
+        labels: topRooms.map(([rno]) => 'غرفة ' + rno),
+        datasets: [{
+          label: 'الإيراد (ج.م)',
+          data: topRooms.map(([,rev]) => rev),
+          backgroundColor: ['#f59e0b','#94a3b8','#b45309','#64748b','#a3a3a3'],
+          borderRadius: 8,
+          borderSkipped: false,
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: ctx => `  ${ctx.parsed.y.toLocaleString('ar-EG')} ج.م` } }
+        },
+        scales: {
+          y: { beginAtZero: true, ticks: { callback: v => (v/1000).toFixed(0)+'K' }, grid: { color: 'rgba(0,0,0,0.05)' } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+  }
+
+  // ── Status Doughnut ──
+  const stCtx = document.getElementById('statusChart');
+  if (stCtx && statusData.length) {
+    new Chart(stCtx, {
+      type: 'doughnut',
+      data: {
+        labels: statusData.map(s => s.label),
+        datasets: [{
+          data: statusData.map(s => s.count),
+          backgroundColor: statusData.map(s => s.bg),
+          borderColor:     statusData.map(s => s.fg),
+          borderWidth: 2,
+          hoverOffset: 6,
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        cutout: '65%',
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: ctx => `  ${ctx.label}: ${ctx.parsed}` } }
+        }
+      }
+    });
+  }
 }
 
 // ═══════════════════════════════════════════
