@@ -587,6 +587,64 @@
 
 <div class="toast" id="toast"></div>
 
+<!-- MODAL: Room Form -->
+<div class="modal-overlay" id="roomModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="roomModalTitle">🛏️ إضافة غرفة</h2>
+      <button class="modal-close" onclick="closeRoomModal()">✕</button>
+    </div>
+    <div>
+      <input type="hidden" id="rf-id">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">🔑 رقم الغرفة</label>
+          <input class="form-input" id="rf-rno" placeholder="مثال: 101">
+        </div>
+        <div class="form-group">
+          <label class="form-label">🏢 الطابق</label>
+          <input class="form-input" id="rf-floor" placeholder="مثال: الأول">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">🏠 نوع الغرفة</label>
+        <select class="form-select" id="rf-rtype" onchange="onRoomTypeSelect()">
+          <option value="">اختر...</option>
+          <option value="غرفة عادية">غرفة عادية</option>
+          <option value="غرفة مزدوجة">غرفة مزدوجة</option>
+          <option value="جناح صغير">جناح صغير</option>
+          <option value="جناح كبير">جناح كبير</option>
+          <option value="جناح ملكي">جناح ملكي</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">💰 السعر / ليلة (ج.م)</label>
+          <input class="form-input" id="rf-price" type="number" placeholder="0">
+        </div>
+        <div class="form-group">
+          <label class="form-label">👥 السعة</label>
+          <input class="form-input" id="rf-capacity" placeholder="مثال: 2 أشخاص">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">✨ المميزات</label>
+        <input class="form-input" id="rf-features" placeholder="مثال: واي فاي، تلفاز، مكيف...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">📊 الحالة</label>
+        <select class="form-select" id="rf-status">
+          <option value="متاح">متاح ✅</option>
+          <option value="صيانة">صيانة 🔧</option>
+          <option value="محجوز">محجوز 🔴</option>
+        </select>
+      </div>
+      <button class="btn-primary" onclick="saveRoom()">💾 حفظ الغرفة</button>
+      <button class="btn-secondary" onclick="closeRoomModal()">✕ إلغاء</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ═══════════════════════════════════════════
 // DATA
@@ -1361,63 +1419,5 @@ loadRooms();
 subscribeRealtime();
 subscribeRoomsRealtime();
 </script>
-
-<!-- MODAL: Room Form -->
-<div class="modal-overlay" id="roomModal">
-  <div class="modal">
-    <div class="modal-header">
-      <h2 id="roomModalTitle">🛏️ إضافة غرفة</h2>
-      <button class="modal-close" onclick="closeRoomModal()">✕</button>
-    </div>
-    <div>
-      <input type="hidden" id="rf-id">
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">🔑 رقم الغرفة</label>
-          <input class="form-input" id="rf-rno" placeholder="مثال: 101">
-        </div>
-        <div class="form-group">
-          <label class="form-label">🏢 الطابق</label>
-          <input class="form-input" id="rf-floor" placeholder="مثال: الأول">
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">🏠 نوع الغرفة</label>
-        <select class="form-select" id="rf-rtype" onchange="onRoomTypeSelect()">
-          <option value="">اختر...</option>
-          <option value="غرفة عادية">غرفة عادية</option>
-          <option value="غرفة مزدوجة">غرفة مزدوجة</option>
-          <option value="جناح صغير">جناح صغير</option>
-          <option value="جناح كبير">جناح كبير</option>
-          <option value="جناح ملكي">جناح ملكي</option>
-        </select>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">💰 السعر / ليلة (ج.م)</label>
-          <input class="form-input" id="rf-price" type="number" placeholder="0">
-        </div>
-        <div class="form-group">
-          <label class="form-label">👥 السعة</label>
-          <input class="form-input" id="rf-capacity" placeholder="مثال: 2 أشخاص">
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">✨ المميزات</label>
-        <input class="form-input" id="rf-features" placeholder="مثال: واي فاي، تلفاز، مكيف...">
-      </div>
-      <div class="form-group">
-        <label class="form-label">📊 الحالة</label>
-        <select class="form-select" id="rf-status">
-          <option value="متاح">متاح ✅</option>
-          <option value="صيانة">صيانة 🔧</option>
-          <option value="محجوز">محجوز 🔴</option>
-        </select>
-      </div>
-      <button class="btn-primary" onclick="saveRoom()">💾 حفظ الغرفة</button>
-      <button class="btn-secondary" onclick="closeRoomModal()">✕ إلغاء</button>
-    </div>
-  </div>
-</div>
 </body>
 </html>
