@@ -367,9 +367,85 @@
     text-transform: uppercase; letter-spacing: 1px;
     margin-bottom: 10px; margin-top: 4px;
   }
+
+  /* ── LOGIN PAGE ──────────────────────────────── */
+  .login-overlay {
+    position: fixed; inset: 0; z-index: 1000;
+    background: linear-gradient(135deg, #0f2444 0%, #1a3a6b 50%, #0f2444 100%);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  .login-overlay.hidden { display: none; }
+  .login-box {
+    width: 100%; max-width: 380px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 24px;
+    padding: 32px 28px;
+    backdrop-filter: blur(20px);
+  }
+  .login-logo {
+    text-align: center; margin-bottom: 28px;
+  }
+  .login-logo .icon { font-size: 52px; display: block; margin-bottom: 8px; }
+  .login-logo h1 { color: #fff; font-size: 24px; font-weight: 900; margin-bottom: 4px; }
+  .login-logo p { color: var(--gold); font-size: 13px; opacity: 0.9; }
+  .login-input {
+    width: 100%; padding: 14px 16px;
+    background: rgba(255,255,255,0.1);
+    border: 1.5px solid rgba(255,255,255,0.2);
+    border-radius: 12px; color: #fff;
+    font-family: 'Cairo', sans-serif; font-size: 15px;
+    outline: none; margin-bottom: 12px;
+    transition: border-color .2s;
+  }
+  .login-input::placeholder { color: rgba(255,255,255,0.45); }
+  .login-input:focus { border-color: var(--gold); }
+  .login-btn {
+    width: 100%; padding: 15px;
+    background: linear-gradient(135deg, var(--gold), #e8c76a);
+    color: var(--navy); border: none; border-radius: 12px;
+    font-family: 'Cairo', sans-serif; font-size: 16px; font-weight: 900;
+    cursor: pointer; margin-top: 4px; transition: opacity .2s;
+  }
+  .login-btn:active { opacity: 0.85; }
+  .login-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .login-error {
+    background: rgba(220,38,38,0.2); border: 1px solid rgba(220,38,38,0.4);
+    color: #fca5a5; border-radius: 10px; padding: 10px 14px;
+    font-size: 13px; font-weight: 600; margin-bottom: 12px;
+    display: none; text-align: center;
+  }
+  .login-error.show { display: block; }
+  .logout-btn {
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.8); border-radius: 8px;
+    padding: 5px 12px; font-size: 11px; font-weight: 700;
+    font-family: 'Cairo', sans-serif; cursor: pointer;
+  }
 </style>
 </head>
 <body>
+
+<!-- LOGIN OVERLAY -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-box">
+    <div class="login-logo">
+      <span class="icon">🏨</span>
+      <h1>فندق الرياض</h1>
+      <p>نظام إدارة الحجوزات</p>
+    </div>
+    <div class="login-error" id="loginError">❌ بيانات خاطئة، حاول مرة تانية</div>
+    <input class="login-input" id="loginEmail" type="email" placeholder="البريد الإلكتروني" autocomplete="email">
+    <input class="login-input" id="loginPassword" type="password" placeholder="كلمة المرور" autocomplete="current-password">
+    <button class="login-btn" id="loginBtn" onclick="doLogin()">🔐 دخول</button>
+    <div style="text-align:center;margin-top:16px;color:rgba(255,255,255,0.4);font-size:11px;">
+      Hotel Management System
+    </div>
+  </div>
+</div>
+
 
 <!-- HEADER -->
 <div class="header">
@@ -377,7 +453,10 @@
     <h1>🏨 <span>فندق</span> الرياض</h1>
     <div style="color:var(--gold);font-size:12px;font-weight:700;" id="headerDate"></div>
   </div>
-  <div class="header-sub">Hotel Reservation System</div>
+  <div style="display:flex;align-items:center;justify-content:space-between;">
+    <div class="header-sub">Hotel Reservation System</div>
+    <button class="logout-btn" onclick="doLogout()">خروج 🚪</button>
+  </div>
   <div class="header-stats">
     <div class="stat-pill"><span id="statConfirmed">0</span> مؤكد</div>
     <div class="stat-pill"><span id="statPending">0</span> انتظار</div>
@@ -670,6 +749,75 @@ const STATUS_STYLE = {
 
 const MONTHS = ["يناير","فبراير","مارس","أبريل","مايو","يونيو",
                 "يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
+
+// ═══════════════════════════════════════════
+// AUTH — Login / Logout
+// ═══════════════════════════════════════════
+async function checkAuth() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    showApp();
+  } else {
+    showLogin();
+  }
+}
+
+function showLogin() {
+  document.getElementById('loginOverlay').classList.remove('hidden');
+}
+
+function showApp() {
+  document.getElementById('loginOverlay').classList.add('hidden');
+  loadBookings();
+  loadRooms();
+  subscribeRealtime();
+  subscribeRoomsRealtime();
+  renderHome();
+}
+
+async function doLogin() {
+  const email    = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  const btn      = document.getElementById('loginBtn');
+  const errEl    = document.getElementById('loginError');
+
+  if (!email || !password) {
+    errEl.textContent = '⚠️ ادخل الإيميل وكلمة المرور';
+    errEl.classList.add('show'); return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = '⏳ جاري الدخول...';
+  errEl.classList.remove('show');
+
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+
+  if (error) {
+    errEl.textContent = '❌ بيانات خاطئة، حاول مرة تانية';
+    errEl.classList.add('show');
+    btn.disabled = false;
+    btn.textContent = '🔐 دخول';
+  } else {
+    showApp();
+  }
+}
+
+async function doLogout() {
+  if (!confirm('هل تريد تسجيل الخروج؟')) return;
+  await sb.auth.signOut();
+  bookings = [];
+  rooms = [];
+  if (realtimeChannel) sb.removeChannel(realtimeChannel);
+  showLogin();
+  showToast('👋 تم تسجيل الخروج');
+}
+
+// Login on Enter key
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !document.getElementById('loginOverlay').classList.contains('hidden')) {
+    doLogin();
+  }
+});
 
 // ═══════════════════════════════════════════
 // SUPABASE CONFIG
@@ -1412,12 +1560,9 @@ document.getElementById('roomModal').addEventListener('click', function(e) {
 });
 
 // ═══════════════════════════════════════════
-// INIT — Supabase
+// INIT — Check Auth first
 // ═══════════════════════════════════════════
-loadBookings();
-loadRooms();
-subscribeRealtime();
-subscribeRoomsRealtime();
+checkAuth();
 </script>
 </body>
 </html>
