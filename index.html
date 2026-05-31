@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>🏨 نظام الفندق</title>
+<title>🏨 فندق النصر</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -38,7 +38,6 @@
     padding-bottom: 90px;
   }
 
-  /* ── HEADER ─────────────────────────────────── */
   .header {
     background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%);
     padding: 20px 20px 16px;
@@ -61,7 +60,6 @@
   }
   .stat-pill span { color: var(--gold); margin-right: 4px; }
 
-  /* ── BOTTOM NAV ──────────────────────────────── */
   .bottom-nav {
     position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
     background: var(--card);
@@ -90,11 +88,9 @@
   }
   .nav-add.active::before { display: none; }
 
-  /* ── PAGES ───────────────────────────────────── */
   .page { display: none; padding: 16px; }
   .page.active { display: block; }
 
-  /* ── CARDS ───────────────────────────────────── */
   .card {
     background: var(--card);
     border-radius: var(--radius);
@@ -110,7 +106,6 @@
   .card-header h3 { font-size: 14px; font-weight: 700; }
   .card-body { padding: 16px; }
 
-  /* ── BOOKING CARDS ───────────────────────────── */
   .booking-card {
     background: var(--card);
     border-radius: var(--radius);
@@ -161,7 +156,6 @@
   .btn-edit { background: var(--navy2); color: #fff; }
   .btn-del  { background: #fee2e2; color: var(--red); }
 
-  /* ── FORM ────────────────────────────────────── */
   .form-group { margin-bottom: 16px; }
   .form-label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; color: var(--text); }
   .form-input, .form-select {
@@ -200,7 +194,6 @@
     cursor: pointer; margin-top: 8px;
   }
 
-  /* ── CALENDAR ────────────────────────────────── */
   .cal-nav {
     display: flex; align-items: center; justify-content: space-between;
     margin-bottom: 12px;
@@ -274,7 +267,6 @@
     width: 14px; height: 14px; border-radius: 4px;
   }
 
-  /* ── DASHBOARD ───────────────────────────────── */
   .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
   .dash-stat {
     background: var(--card); border-radius: 14px;
@@ -295,7 +287,6 @@
   .revenue-card .amount { color: var(--gold); font-size: 26px; font-weight: 900; margin-top: 4px; }
   .revenue-card .icon { font-size: 40px; opacity: 0.5; }
 
-  /* ── UPCOMING ────────────────────────────────── */
   .upcoming-item {
     display: flex; align-items: center; gap: 12px;
     padding: 12px 0; border-bottom: 1px solid var(--border);
@@ -314,7 +305,6 @@
     border-radius: 20px; white-space: nowrap;
   }
 
-  /* ── MODAL ───────────────────────────────────── */
   .modal-overlay {
     display: none; position: fixed; inset: 0; z-index: 300;
     background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
@@ -369,7 +359,6 @@
     margin-bottom: 10px; margin-top: 4px;
   }
 
-  /* ── LOGIN PAGE ──────────────────────────────── */
   .login-overlay {
     position: fixed; inset: 0; z-index: 1000;
     background: linear-gradient(135deg, #0f2444 0%, #1a3a6b 50%, #0f2444 100%);
@@ -426,7 +415,6 @@
     font-family: 'Cairo', sans-serif; cursor: pointer;
   }
 
-  /* ── REPORTS ─────────────────────────────────── */
   .report-section { margin-bottom: 20px; }
   .chart-wrap {
     background: var(--card); border-radius: var(--radius);
@@ -492,7 +480,7 @@
   <div class="login-box">
     <div class="login-logo">
       <span class="icon">🏨</span>
-      <h1>فندق الرياض</h1>
+      <h1>فندق النصر</h1>
       <p>نظام إدارة الحجوزات</p>
     </div>
     <div class="login-error" id="loginError">❌ بيانات خاطئة، حاول مرة تانية</div>
@@ -505,11 +493,10 @@
   </div>
 </div>
 
-
 <!-- HEADER -->
 <div class="header">
   <div class="header-top">
-    <h1>🏨 <span>فندق</span> الرياض</h1>
+    <h1>🏨 <span>فندق</span> النصر</h1>
     <div style="color:var(--gold);font-size:12px;font-weight:700;" id="headerDate"></div>
   </div>
   <div style="display:flex;align-items:center;justify-content:space-between;">
@@ -667,12 +654,9 @@
   </div>
 </div>
 
-<div class="page" id="page-calendar">
-  <div class="cal-nav">
-    <button class="cal-nav-btn" onclick="changeMonth(-1)">▶</button>
-    <h2 id="calTitle"></h2>
-    <button class="cal-nav-btn" onclick="changeMonth(1)">◀</button>
-  </div>
+<button class="cal-nav-btn" onclick="changeMonth(-1)">◀</button>
+<h2 id="calTitle"></h2>
+<button class="cal-nav-btn" onclick="changeMonth(1)">▶</button>
 
   <div id="calContent"></div>
 
@@ -685,7 +669,6 @@
   </div>
 </div>
 
-<!-- BOTTOM NAV -->
 <div class="page" id="page-reports">
   <div class="period-tabs">
     <button class="period-tab active" onclick="setPeriod('month',this)">هذا الشهر</button>
@@ -823,15 +806,11 @@ const MONTHS = ["يناير","فبراير","مارس","أبريل","مايو","
                 "يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
 
 // ═══════════════════════════════════════════
-// AUTH — Login / Logout
+// AUTH
 // ═══════════════════════════════════════════
 async function checkAuth() {
   const { data: { session } } = await sb.auth.getSession();
-  if (session) {
-    showApp();
-  } else {
-    showLogin();
-  }
+  if (session) { showApp(); } else { showLogin(); }
 }
 
 function showLogin() {
@@ -884,7 +863,6 @@ async function doLogout() {
   showToast('👋 تم تسجيل الخروج');
 }
 
-// Login on Enter key
 document.addEventListener('keydown', e => {
   if (e.key === 'Enter' && !document.getElementById('loginOverlay').classList.contains('hidden')) {
     doLogin();
@@ -905,7 +883,6 @@ let currentFilter = 'all';
 let editingId = null;
 let realtimeChannel = null;
 
-// ── Connection Status UI ────────────────────
 function setConnStatus(state) {
   const el = document.getElementById('connStatus');
   const states = {
@@ -919,7 +896,6 @@ function setConnStatus(state) {
   el.innerHTML          = s.html;
 }
 
-// ── Load from Supabase ──────────────────────
 async function loadBookings() {
   setConnStatus('connecting');
   try {
@@ -927,7 +903,6 @@ async function loadBookings() {
     if (error) throw error;
     bookings = (data || []).map(mapFromDb);
     setConnStatus('online');
-    // Seed if empty
     if (bookings.length === 0) await seedSampleData();
     renderCurrentPage();
   } catch(e) {
@@ -937,14 +912,12 @@ async function loadBookings() {
   }
 }
 
-// ── Realtime Subscription ───────────────────
 function subscribeRealtime() {
   realtimeChannel = sb.channel('bookings-changes')
     .on('postgres_changes',
       { event: '*', schema: 'public', table: 'bookings' },
       payload => {
         const { eventType, new: newRow, old: oldRow } = payload;
-        // تجاهل الـ event لو احنا اللي عملناه (already updated locally)
         if (eventType === 'INSERT') {
           const exists = bookings.find(b => b.id === newRow.id);
           if (!exists) { bookings.unshift(mapFromDb(newRow)); renderCurrentPage(); }
@@ -967,7 +940,6 @@ function subscribeRealtime() {
     });
 }
 
-// ── Map DB row → app object ─────────────────
 function mapFromDb(row) {
   return {
     id:       row.id,
@@ -984,7 +956,6 @@ function mapFromDb(row) {
   };
 }
 
-// ── Seed sample data ────────────────────────
 async function seedSampleData() {
   const y = new Date().getFullYear();
   const samples = [
@@ -1003,7 +974,6 @@ async function seedSampleData() {
   if (!error) bookings = samples;
 }
 
-// ── Render current visible page ─────────────
 function renderCurrentPage() {
   const active = document.querySelector('.page.active')?.id?.replace('page-','');
   if (active === 'home')     renderHome();
@@ -1066,7 +1036,6 @@ function renderHome() {
   document.getElementById('ds-pending').textContent    = pending;
   document.getElementById('ds-balance').textContent    = Math.round(balTotal/1000) + 'K';
 
-  // Upcoming check-ins (next 30 days)
   const upcoming = bookings
     .filter(b => b.status !== 'ملغي ❌' && b.checkin >= today)
     .sort((a,b) => a.checkin.localeCompare(b.checkin))
@@ -1150,7 +1119,6 @@ function onRoomTypeChange() {
   const rt = document.getElementById('f-rtype').value;
   const sel = document.getElementById('f-rno');
   if (!rt) { sel.innerHTML = '<option value="">اختر النوع أولاً</option>'; return; }
-  // استخدم الغرف من Supabase لو موجودة، وإلا fallback للـ hardcoded
   const dbRooms = rooms.filter(r => r.rtype === rt && r.status !== 'صيانة');
   if (dbRooms.length > 0) {
     sel.innerHTML = dbRooms.map(r => `<option value="${r.rno}">غرفة ${r.rno} — ${Number(r.price).toLocaleString()} ج.م</option>`).join('');
@@ -1168,7 +1136,6 @@ function calcNights() {
   const ci  = document.getElementById('f-checkin').value;
   const co  = document.getElementById('f-checkout').value;
   const dep = parseFloat(document.getElementById('f-deposit').value)||0;
-  // السعر من جدول الغرف أولاً، ثم fallback
   const dbRoom = rooms.find(r => r.rno === rno && r.rtype === rt);
   const price  = dbRoom ? Number(dbRoom.price) : (rt && ROOM_MAP[rt] ? ROOM_MAP[rt].price : 0);
   const n = nights(ci, co);
@@ -1231,6 +1198,21 @@ async function saveBooking() {
     return;
   }
 
+  // ══ FIX: التحقق من تعارض الحجوزات ══
+  const conflicting = bookings.find(b => {
+    if (b.status === 'ملغي ❌') return false;
+    if (b.rno !== rno) return false;
+    if (editingId && b.id === editingId) return false;
+    return checkin < b.checkout && checkout > b.checkin;
+  });
+
+  if (conflicting) {
+    const n = nights(conflicting.checkin, conflicting.checkout);
+    showToast(`⛔ غرفة ${rno} محجوزة من ${conflicting.checkin} إلى ${conflicting.checkout} (${n} ليالي) — ${conflicting.name}`);
+    return;
+  }
+  // ══════════════════════════════════════
+
   const dbRoom = rooms.find(r => r.rno === rno && r.rtype === rtype);
   const price  = dbRoom ? Number(dbRoom.price) : (ROOM_MAP[rtype]?.price || 0);
   const entry = { name, phone, rtype, rno, checkin, checkout, price, deposit, status, notes };
@@ -1238,7 +1220,6 @@ async function saveBooking() {
   if (editingId) {
     const { error } = await sb.from('bookings').update(entry).eq('id', editingId);
     if (error) { showToast('❌ خطأ في التحديث: ' + error.message); return; }
-    // حدّث local array فوراً
     const idx = bookings.findIndex(b => b.id === editingId);
     if (idx !== -1) bookings[idx] = { ...bookings[idx], ...entry };
     showToast('✅ تم تحديث الحجز');
@@ -1246,7 +1227,6 @@ async function saveBooking() {
     entry.id = nextId();
     const { error } = await sb.from('bookings').insert(entry);
     if (error) { showToast('❌ خطأ في الحفظ: ' + error.message); return; }
-    // أضف فوراً للـ local array
     bookings.unshift(entry);
     showToast('✅ تم إضافة الحجز');
   }
@@ -1259,7 +1239,6 @@ async function deleteBooking(id) {
   if (!confirm('هل تريد حذف هذا الحجز؟')) return;
   const { error } = await sb.from('bookings').delete().eq('id', id);
   if (error) { showToast('❌ خطأ في الحذف'); return; }
-  // احذف من local array فوراً
   bookings = bookings.filter(b => b.id !== id);
   closeModal();
   renderCurrentPage();
@@ -1283,14 +1262,12 @@ function renderCalendar() {
 
   let html = '';
 
-  // استخدم الغرف من Supabase — مجمعة حسب النوع
   const grouped = {};
   rooms.forEach(r => {
     if (!grouped[r.rtype]) grouped[r.rtype] = [];
     grouped[r.rtype].push(r);
   });
 
-  // رتب حسب الترتيب المعروف
   const rtypes = ROOM_TYPES_ORDER.filter(rt => grouped[rt]?.length > 0);
 
   if (rtypes.length === 0) {
@@ -1306,7 +1283,6 @@ function renderCalendar() {
     html += `<div class="room-type-header" style="background:linear-gradient(90deg,${color},${color}cc)">🏠 ${rtype} (${typeRooms.length} غرفة)</div>`;
     html += '<div class="cal-grid-wrap"><div class="cal-grid">';
 
-    // header row
     html += '<div class="cal-grid-header">';
     html += '<div>الغرفة</div>';
     for (let d = 1; d <= 31; d++) {
@@ -1320,7 +1296,6 @@ function renderCalendar() {
     }
     html += '</div>';
 
-    // room rows — من Supabase
     for (const room of typeRooms) {
       const rno = room.rno;
       const isMaintenance = room.status === 'صيانة';
@@ -1348,8 +1323,7 @@ function renderCalendar() {
           const isCancelled = booking.status === 'ملغي ❌';
           let cls = 'booked', lbl = '●';
           if (isCancelled) { cls = 'cancelled'; lbl = '✕'; }
-          else if (isCI)   { cls = 'checkin';   lbl = '→'; }
-          html += `<div class="cal-cell ${cls}" title="${booking.name}" onclick="openDetail('${booking.id}')">${lbl}</div>`;
+else if (isCI)   { cls = 'checkin';   lbl = '←'; }          html += `<div class="cal-cell ${cls}" title="${booking.name}" onclick="openDetail('${booking.id}')">${lbl}</div>`;
         } else {
           html += `<div class="cal-cell ${isWE?'weekend':''}" onclick="quickAddFromCal('${rno}','${rtype}','${dateStr}')"></div>`;
         }
@@ -1442,8 +1416,6 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2800);
 }
 
-
-
 // ═══════════════════════════════════════════
 // REPORTS
 // ═══════════════════════════════════════════
@@ -1469,7 +1441,7 @@ function getFilteredBookings() {
       return d.getFullYear() === year && Math.floor(d.getMonth() / 3) === q;
     }
     if (reportPeriod === 'year')    return d.getFullYear() === year;
-    return true; // all
+    return true;
   });
 }
 
@@ -1485,7 +1457,6 @@ function renderReports() {
   const year   = now.getFullYear();
   const month  = now.getMonth();
 
-  // KPIs
   const totalRev   = filtered.reduce((s,b) => s + calcTotal(b), 0);
   const totalDep   = filtered.reduce((s,b) => s + Number(b.deposit||0), 0);
   const totalBal   = filtered.reduce((s,b) => s + Math.max(0, calcTotal(b) - Number(b.deposit||0)), 0);
@@ -1493,7 +1464,6 @@ function renderReports() {
   const avgRevPerB = filtered.length ? Math.round(totalRev / filtered.length) : 0;
   const totalNights = filtered.reduce((s,b) => s + Math.max(0,(new Date(b.checkout)-new Date(b.checkin))/86400000), 0);
 
-  // Occupancy per room type
   const daysInPeriod = reportPeriod === 'month' ? new Date(year, month+1, 0).getDate()
     : reportPeriod === 'quarter' ? 91 : reportPeriod === 'year' ? 365 : 365;
 
@@ -1507,7 +1477,6 @@ function renderReports() {
     occByType[rt] = { pct: Math.min(100, Math.round(occupied/totalDays*100)), count: typeRooms.length };
   });
 
-  // Monthly revenue last 6 months
   const monthlyRev = [];
   for (let i = 5; i >= 0; i--) {
     const d   = new Date(year, month - i, 1);
@@ -1519,19 +1488,15 @@ function renderReports() {
     monthlyRev.push({ label: MONTHS[m].slice(0,3), rev, current: i === 0 });
   }
 
-  // Top rooms
   const roomRev = {};
   filtered.forEach(b => { roomRev[b.rno] = (roomRev[b.rno]||0) + calcTotal(b); });
   const topRooms = Object.entries(roomRev).sort((a,b)=>b[1]-a[1]).slice(0,5);
 
-  // Status breakdown
   const statuses  = ['مؤكد ✅','انتظار ⏳','تسجيل خروج 🔑','مكتمل ✔️'];
   const statusData = statuses.map(s => ({
     label: s, count: filtered.filter(b => b.status === s).length,
     ...(STATUS_STYLE[s] || {bg:'#eee', fg:'#333'})
   })).filter(s => s.count > 0);
-
-  const rankColors = ['#f59e0b','#94a3b8','#b45309','#64748b','#a3a3a3'];
 
   document.getElementById('reportsContent').innerHTML = `
   <div class="kpi-grid">
@@ -1606,7 +1571,6 @@ function renderReports() {
   </div>` : ''}
   `;
 
-  // Destroy old charts
   ['revenueChart','occupancyChart','topRoomsChart','statusChart'].forEach(id => {
     const existing = Chart.getChart(id);
     if (existing) existing.destroy();
@@ -1615,7 +1579,6 @@ function renderReports() {
   Chart.defaults.font.family = 'Cairo';
   Chart.defaults.color = '#64748b';
 
-  // ── Revenue Bar Chart ──
   const revCtx = document.getElementById('revenueChart');
   if (revCtx) {
     new Chart(revCtx, {
@@ -1636,25 +1599,16 @@ function renderReports() {
         responsive: true, maintainAspectRatio: false,
         plugins: {
           legend: { display: false },
-          tooltip: {
-            callbacks: {
-              label: ctx => `  ${ctx.parsed.y.toLocaleString('ar-EG')} ج.م`
-            }
-          }
+          tooltip: { callbacks: { label: ctx => `  ${ctx.parsed.y.toLocaleString('ar-EG')} ج.م` } }
         },
         scales: {
-          y: {
-            beginAtZero: true,
-            grid: { color: 'rgba(0,0,0,0.05)' },
-            ticks: { callback: v => (v/1000).toFixed(0)+'K' }
-          },
+          y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { callback: v => (v/1000).toFixed(0)+'K' } },
           x: { grid: { display: false } }
         }
       }
     });
   }
 
-  // ── Occupancy Horizontal Bar ──
   const occEntries = Object.entries(occByType).filter(([,v]) => v.count > 0);
   const occCtx = document.getElementById('occupancyChart');
   if (occCtx && occEntries.length) {
@@ -1678,18 +1632,13 @@ function renderReports() {
           tooltip: { callbacks: { label: ctx => `  ${ctx.parsed.x}%` } }
         },
         scales: {
-          x: {
-            beginAtZero: true, max: 100,
-            grid: { color: 'rgba(0,0,0,0.05)' },
-            ticks: { callback: v => v+'%' }
-          },
+          x: { beginAtZero: true, max: 100, grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { callback: v => v+'%' } },
           y: { grid: { display: false } }
         }
       }
     });
   }
 
-  // ── Top Rooms Bar ──
   const topCtx = document.getElementById('topRoomsChart');
   if (topCtx && topRooms.length) {
     new Chart(topCtx, {
@@ -1718,7 +1667,6 @@ function renderReports() {
     });
   }
 
-  // ── Status Doughnut ──
   const stCtx = document.getElementById('statusChart');
   if (stCtx && statusData.length) {
     new Chart(stCtx, {
@@ -1746,7 +1694,7 @@ function renderReports() {
 }
 
 // ═══════════════════════════════════════════
-// ROOMS DATA & FUNCTIONS
+// ROOMS
 // ═══════════════════════════════════════════
 let rooms = [];
 
@@ -1771,7 +1719,6 @@ async function loadRooms() {
   if (error) { console.error('rooms load error', error); return; }
   rooms = data || [];
   if (rooms.length === 0) await seedRooms();
-  // Update booking form dropdowns if on add page
   const rt = document.getElementById('f-rtype')?.value;
   if (rt) onRoomTypeChange();
 }
@@ -1798,7 +1745,6 @@ async function seedRooms() {
   if (!error) rooms = seed;
 }
 
-// Realtime for rooms table
 function subscribeRoomsRealtime() {
   sb.channel('rooms-changes')
     .on('postgres_changes', { event: '*', schema: 'public', table: 'rooms' }, payload => {
@@ -1823,7 +1769,6 @@ function renderRooms() {
     return;
   }
 
-  // Group by type
   const grouped = {};
   rooms.forEach(r => {
     if (!grouped[r.rtype]) grouped[r.rtype] = [];
@@ -1960,7 +1905,7 @@ document.getElementById('roomModal').addEventListener('click', function(e) {
 });
 
 // ═══════════════════════════════════════════
-// INIT — Check Auth first
+// INIT
 // ═══════════════════════════════════════════
 checkAuth();
 </script>
