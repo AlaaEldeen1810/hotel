@@ -1,1094 +1,1798 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>🏨 فندق النصر</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<style>
-  :root {
-    --navy: #0f2444;
-    --navy2: #1a3a6b;
-    --gold: #c9a84c;
-    --gold2: #e8c76a;
-    --blue: #2e7dd6;
-    --green: #16a34a;
-    --red: #dc2626;
-    --orange: #ea580c;
-    --purple: #7c3aed;
-    --teal: #0d9488;
-    --bg: #f0f4f8;
-    --card: #ffffff;
-    --text: #1e293b;
-    --muted: #64748b;
-    --border: #e2e8f0;
-    --radius: 16px;
-    --shadow: 0 4px 24px rgba(15,36,68,0.10);
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>🏨 نظام الفندق</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --navy: #0f2444;
+      --navy2: #1a3a6b;
+      --gold: #c9a84c;
+      --gold2: #e8c76a;
+      --blue: #2e7dd6;
+      --green: #16a34a;
+      --red: #dc2626;
+      --orange: #ea580c;
+      --purple: #7c3aed;
+      --teal: #0d9488;
+      --bg: #f0f4f8;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 16px;
+      --shadow: 0 4px 24px rgba(15, 36, 68, 0.10);
+    }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-  body {
-    font-family: 'Cairo', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    padding-bottom: 90px;
-  }
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding-bottom: 90px;
+    }
 
-  .header {
-    background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%);
-    padding: 20px 20px 16px;
-    position: sticky; top: 0; z-index: 100;
-    box-shadow: 0 2px 20px rgba(0,0,0,0.3);
-  }
-  .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
-  .header h1 { color: #fff; font-size: 20px; font-weight: 900; }
-  .header h1 span { color: var(--gold); }
-  .header-sub { color: var(--gold2); font-size: 11px; opacity: 0.85; }
-  .header-stats { display: flex; gap: 12px; margin-top: 12px; }
-  .stat-pill {
-    background: rgba(255,255,255,0.12);
-    border: 1px solid rgba(255,255,255,0.18);
-    border-radius: 20px;
-    padding: 5px 12px;
-    color: #fff;
-    font-size: 12px;
-    font-weight: 600;
-  }
-  .stat-pill span { color: var(--gold); margin-right: 4px; }
+    /* ── HEADER ─────────────────────────────────── */
+    .header {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%);
+      padding: 20px 20px 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+    }
 
-  .bottom-nav {
-    position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
-    background: var(--card);
-    border-top: 1px solid var(--border);
-    display: flex;
-    box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
-  }
-  .nav-btn {
-    flex: 1; display: flex; flex-direction: column; align-items: center;
-    justify-content: center; padding: 10px 4px 14px;
-    border: none; background: none; color: var(--muted);
-    font-family: 'Cairo', sans-serif; font-size: 10px; font-weight: 600;
-    cursor: pointer; transition: all .2s; position: relative;
-  }
-  .nav-btn .icon { font-size: 22px; margin-bottom: 2px; }
-  .nav-btn.active { color: var(--navy2); }
-  .nav-btn.active::before {
-    content: ''; position: absolute; top: 0; left: 20%; right: 20%;
-    height: 3px; background: var(--gold); border-radius: 0 0 4px 4px;
-  }
-  .nav-add {
-    background: linear-gradient(135deg, var(--navy2), var(--blue));
-    color: #fff !important;
-    border-radius: 16px 16px 0 0;
-    margin: 0 8px;
-  }
-  .nav-add.active::before { display: none; }
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
 
-  .page { display: none; padding: 16px; }
-  .page.active { display: block; }
+    .header h1 {
+      color: #fff;
+      font-size: 20px;
+      font-weight: 900;
+    }
 
-  .card {
-    background: var(--card);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    overflow: hidden;
-    margin-bottom: 14px;
-  }
-  .card-header {
-    padding: 14px 16px 12px;
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  .card-header h3 { font-size: 14px; font-weight: 700; }
-  .card-body { padding: 16px; }
+    .header h1 span {
+      color: var(--gold);
+    }
 
-  .booking-card {
-    background: var(--card);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    margin-bottom: 12px;
-    overflow: hidden;
-    border-right: 4px solid var(--blue);
-    transition: transform .15s;
-    cursor: pointer;
-  }
-  .booking-card:active { transform: scale(0.98); }
-  .booking-card.status-confirmed { border-right-color: var(--green); }
-  .booking-card.status-pending   { border-right-color: var(--orange); }
-  .booking-card.status-cancelled { border-right-color: var(--red); }
-  .booking-card.status-checkout  { border-right-color: var(--blue); }
-  .booking-card.status-done      { border-right-color: var(--muted); }
+    .header-sub {
+      color: var(--gold2);
+      font-size: 11px;
+      opacity: 0.85;
+    }
 
-  .bc-header {
-    padding: 12px 14px 8px;
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  .bc-id { font-size: 11px; color: var(--muted); font-weight: 600; }
-  .bc-status {
-    font-size: 11px; font-weight: 700; padding: 3px 10px;
-    border-radius: 20px;
-  }
-  .bc-name { padding: 0 14px; font-size: 16px; font-weight: 800; color: var(--navy); margin-bottom: 4px; }
-  .bc-details {
-    padding: 8px 14px 12px;
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 6px;
-  }
-  .bc-detail { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--muted); }
-  .bc-detail strong { color: var(--text); font-weight: 700; }
-  .bc-footer {
-    background: var(--bg);
-    padding: 10px 14px;
-    display: flex; justify-content: space-between; align-items: center;
-    border-top: 1px solid var(--border);
-  }
-  .bc-total { font-size: 13px; font-weight: 800; color: var(--navy); }
-  .bc-actions { display: flex; gap: 8px; }
-  .btn-sm {
-    padding: 5px 12px; border-radius: 8px; font-size: 12px;
-    font-weight: 700; font-family: 'Cairo', sans-serif;
-    border: none; cursor: pointer; transition: all .15s;
-  }
-  .btn-edit { background: var(--navy2); color: #fff; }
-  .btn-del  { background: #fee2e2; color: var(--red); }
+    .header-stats {
+      display: flex;
+      gap: 12px;
+      margin-top: 12px;
+    }
 
-  .form-group { margin-bottom: 16px; }
-  .form-label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; color: var(--text); }
-  .form-input, .form-select {
-    width: 100%; padding: 12px 14px;
-    border: 2px solid var(--border); border-radius: 10px;
-    font-family: 'Cairo', sans-serif; font-size: 14px; color: var(--text);
-    background: var(--card); outline: none;
-    transition: border-color .2s;
-    -webkit-appearance: none;
-  }
-  .form-input:focus, .form-select:focus { border-color: var(--navy2); }
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .form-calc {
-    background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%);
-    border-radius: 10px; padding: 12px 14px;
-    display: grid; grid-template-columns: 1fr 1fr 1fr;
-    gap: 8px; margin-bottom: 16px;
-  }
-  .calc-item { text-align: center; }
-  .calc-label { font-size: 10px; color: rgba(255,255,255,0.65); font-weight: 600; }
-  .calc-val { font-size: 16px; font-weight: 900; color: var(--gold); }
+    .stat-pill {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 20px;
+      padding: 5px 12px;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 600;
+    }
 
-  .btn-primary {
-    width: 100%; padding: 15px;
-    background: linear-gradient(135deg, var(--navy2), var(--blue));
-    color: #fff; border: none; border-radius: 12px;
-    font-family: 'Cairo', sans-serif; font-size: 16px; font-weight: 800;
-    cursor: pointer; transition: opacity .2s;
-  }
-  .btn-primary:active { opacity: 0.85; }
-  .btn-secondary {
-    width: 100%; padding: 13px;
-    background: var(--bg); color: var(--muted);
-    border: 2px solid var(--border); border-radius: 12px;
-    font-family: 'Cairo', sans-serif; font-size: 14px; font-weight: 700;
-    cursor: pointer; margin-top: 8px;
-  }
+    .stat-pill span {
+      color: var(--gold);
+      margin-right: 4px;
+    }
 
-  .cal-nav {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 12px;
-  }
-  .cal-nav h2 { font-size: 18px; font-weight: 900; color: var(--navy); }
-  .cal-nav-btn {
-    background: var(--card); border: 2px solid var(--border);
-    border-radius: 10px; width: 38px; height: 38px;
-    font-size: 18px; cursor: pointer; display: flex;
-    align-items: center; justify-content: center;
-    color: var(--navy2); font-weight: 900;
-  }
+    /* ── BOTTOM NAV ──────────────────────────────── */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      display: flex;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+    }
 
-  .room-type-header {
-    background: linear-gradient(90deg, var(--navy2), var(--blue));
-    color: #fff; font-size: 12px; font-weight: 800;
-    padding: 7px 12px; border-radius: 8px 8px 0 0;
-    margin-top: 14px; margin-bottom: 0;
-  }
-  .cal-grid-wrap { overflow-x: auto; }
-  .cal-grid {
-    display: grid;
-    font-size: 11px;
-    min-width: 600px;
-  }
-  .cal-grid-header {
-    display: grid;
-    grid-template-columns: 90px repeat(31, 1fr);
-    background: #1e3a5f;
-    border-radius: 0;
-  }
-  .cal-grid-header div {
-    padding: 6px 2px; text-align: center;
-    color: rgba(255,255,255,0.9); font-weight: 700; font-size: 10px;
-  }
-  .cal-grid-header div:first-child { color: #fff; font-size: 11px; }
-  .cal-row {
-    display: grid;
-    grid-template-columns: 90px repeat(31, 1fr);
-    border-bottom: 1px solid #e8edf2;
-  }
-  .cal-row:nth-child(even) { background: #f8fafc; }
-  .cal-room-label {
-    padding: 7px 8px; font-size: 11px; font-weight: 700;
-    color: var(--navy); border-left: 1px solid var(--border);
-    display: flex; align-items: center;
-    background: #f0f4fa;
-  }
-  .cal-cell {
-    border-left: 1px solid #e8edf2;
-    height: 30px; display: flex; align-items: center; justify-content: center;
-    cursor: pointer; transition: background .1s; position: relative;
-  }
-  .cal-cell.weekend { background: #fff7ed; }
-  .cal-cell.booked {
-    background: var(--red); color: #fff;
-    font-weight: 800; font-size: 13px;
-  }
-  .cal-cell.checkin  { background: #1d4ed8; color: #fff; font-size: 12px; font-weight: 800; }
-  .cal-cell.checkout { background: var(--green); color: #fff; font-size: 12px; font-weight: 800; }
-  .cal-cell.cancelled { background: #d1d5db; color: #6b7280; font-size: 12px; }
-  .cal-cell.empty-day { background: #f1f5f9; }
-  .cal-cell:active { opacity: 0.7; }
+    .nav-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 4px 14px;
+      border: none;
+      background: none;
+      color: var(--muted);
+      font-family: 'Cairo', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .2s;
+      position: relative;
+    }
 
-  .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-  .legend-item {
-    display: flex; align-items: center; gap: 5px;
-    font-size: 11px; font-weight: 600; color: var(--muted);
-  }
-  .legend-dot {
-    width: 14px; height: 14px; border-radius: 4px;
-  }
+    .nav-btn .icon {
+      font-size: 22px;
+      margin-bottom: 2px;
+    }
 
-  .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
-  .dash-stat {
-    background: var(--card); border-radius: 14px;
-    padding: 14px; text-align: center;
-    box-shadow: var(--shadow);
-  }
-  .dash-stat .ds-icon { font-size: 26px; margin-bottom: 4px; }
-  .dash-stat .ds-val { font-size: 22px; font-weight: 900; color: var(--navy); }
-  .dash-stat .ds-label { font-size: 11px; color: var(--muted); font-weight: 600; margin-top: 2px; }
-  .dash-full { grid-column: 1/-1; }
-  .revenue-card {
-    background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%);
-    border-radius: 14px; padding: 18px;
-    box-shadow: var(--shadow); margin-bottom: 14px;
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  .revenue-card .label { color: rgba(255,255,255,0.7); font-size: 12px; font-weight: 600; }
-  .revenue-card .amount { color: var(--gold); font-size: 26px; font-weight: 900; margin-top: 4px; }
-  .revenue-card .icon { font-size: 40px; opacity: 0.5; }
+    .nav-btn.active {
+      color: var(--navy2);
+    }
 
-  .upcoming-item {
-    display: flex; align-items: center; gap: 12px;
-    padding: 12px 0; border-bottom: 1px solid var(--border);
-  }
-  .upcoming-item:last-child { border-bottom: none; }
-  .up-date {
-    background: var(--navy2); color: #fff;
-    border-radius: 10px; padding: 6px 10px; text-align: center;
-    min-width: 42px; font-weight: 900; font-size: 11px; line-height: 1.4;
-  }
-  .up-info { flex: 1; }
-  .up-name { font-size: 14px; font-weight: 800; color: var(--navy); }
-  .up-room { font-size: 11px; color: var(--muted); margin-top: 2px; }
-  .up-badge {
-    font-size: 11px; font-weight: 700; padding: 4px 10px;
-    border-radius: 20px; white-space: nowrap;
-  }
+    .nav-btn.active::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 20%;
+      right: 20%;
+      height: 3px;
+      background: var(--gold);
+      border-radius: 0 0 4px 4px;
+    }
 
-  .modal-overlay {
-    display: none; position: fixed; inset: 0; z-index: 300;
-    background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
-    align-items: flex-end; justify-content: center;
-  }
-  .modal-overlay.open { display: flex; }
-  .modal {
-    background: var(--card); border-radius: 24px 24px 0 0;
-    width: 100%; max-height: 90vh; overflow-y: auto;
-    padding: 20px; animation: slideUp .25s ease;
-  }
-  @keyframes slideUp { from { transform: translateY(60px); opacity: 0; } to { transform: none; opacity: 1; } }
-  .modal-header {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 18px; padding-bottom: 14px;
-    border-bottom: 2px solid var(--border);
-  }
-  .modal-header h2 { font-size: 18px; font-weight: 900; color: var(--navy); }
-  .modal-close {
-    background: var(--bg); border: none; border-radius: 50%;
-    width: 36px; height: 36px; font-size: 18px; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-  }
+    .nav-add {
+      background: linear-gradient(135deg, var(--navy2), var(--blue));
+      color: #fff !important;
+      border-radius: 16px 16px 0 0;
+      margin: 0 8px;
+    }
 
-  .toast {
-    position: fixed; bottom: 100px; left: 16px; right: 16px; z-index: 400;
-    background: var(--navy); color: #fff;
-    border-radius: 12px; padding: 14px 18px;
-    font-size: 14px; font-weight: 700; text-align: center;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-    transform: translateY(80px); opacity: 0;
-    transition: all .3s; pointer-events: none;
-  }
-  .toast.show { transform: none; opacity: 1; }
+    .nav-add.active::before {
+      display: none;
+    }
 
-  .filter-bar { display: flex; gap: 8px; margin-bottom: 14px; overflow-x: auto; padding-bottom: 4px; }
-  .filter-chip {
-    padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 700;
-    border: 2px solid var(--border); background: var(--card); color: var(--muted);
-    cursor: pointer; white-space: nowrap; font-family: 'Cairo', sans-serif;
-    transition: all .15s;
-  }
-  .filter-chip.active { background: var(--navy2); color: #fff; border-color: var(--navy2); }
+    /* ── PAGES ───────────────────────────────────── */
+    .page {
+      display: none;
+      padding: 16px;
+    }
 
-  .empty-state { text-align: center; padding: 40px 20px; color: var(--muted); }
-  .empty-state .es-icon { font-size: 48px; margin-bottom: 12px; }
-  .empty-state p { font-size: 14px; }
+    .page.active {
+      display: block;
+    }
 
-  .section-title {
-    font-size: 13px; font-weight: 800; color: var(--muted);
-    text-transform: uppercase; letter-spacing: 1px;
-    margin-bottom: 10px; margin-top: 4px;
-  }
+    /* ── CARDS ───────────────────────────────────── */
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
 
-  .login-overlay {
-    position: fixed; inset: 0; z-index: 1000;
-    background: linear-gradient(135deg, #0f2444 0%, #1a3a6b 50%, #0f2444 100%);
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    padding: 24px;
-  }
-  .login-overlay.hidden { display: none; }
-  .login-box {
-    width: 100%; max-width: 380px;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 24px;
-    padding: 32px 28px;
-    backdrop-filter: blur(20px);
-  }
-  .login-logo {
-    text-align: center; margin-bottom: 28px;
-  }
-  .login-logo .icon { font-size: 52px; display: block; margin-bottom: 8px; }
-  .login-logo h1 { color: #fff; font-size: 24px; font-weight: 900; margin-bottom: 4px; }
-  .login-logo p { color: var(--gold); font-size: 13px; opacity: 0.9; }
-  .login-input {
-    width: 100%; padding: 14px 16px;
-    background: rgba(255,255,255,0.1);
-    border: 1.5px solid rgba(255,255,255,0.2);
-    border-radius: 12px; color: #fff;
-    font-family: 'Cairo', sans-serif; font-size: 15px;
-    outline: none; margin-bottom: 12px;
-    transition: border-color .2s;
-  }
-  .login-input::placeholder { color: rgba(255,255,255,0.45); }
-  .login-input:focus { border-color: var(--gold); }
-  .login-btn {
-    width: 100%; padding: 15px;
-    background: linear-gradient(135deg, var(--gold), #e8c76a);
-    color: var(--navy); border: none; border-radius: 12px;
-    font-family: 'Cairo', sans-serif; font-size: 16px; font-weight: 900;
-    cursor: pointer; margin-top: 4px; transition: opacity .2s;
-  }
-  .login-btn:active { opacity: 0.85; }
-  .login-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-  .login-error {
-    background: rgba(220,38,38,0.2); border: 1px solid rgba(220,38,38,0.4);
-    color: #fca5a5; border-radius: 10px; padding: 10px 14px;
-    font-size: 13px; font-weight: 600; margin-bottom: 12px;
-    display: none; text-align: center;
-  }
-  .login-error.show { display: block; }
-  .logout-btn {
-    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
-    color: rgba(255,255,255,0.8); border-radius: 8px;
-    padding: 5px 12px; font-size: 11px; font-weight: 700;
-    font-family: 'Cairo', sans-serif; cursor: pointer;
-  }
+    .card-header {
+      padding: 14px 16px 12px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
 
-  .report-section { margin-bottom: 20px; }
-  .chart-wrap {
-    background: var(--card); border-radius: var(--radius);
-    box-shadow: var(--shadow); padding: 16px; margin-bottom: 14px;
-  }
-  .chart-title {
-    font-size: 13px; font-weight: 800; color: var(--navy);
-    margin-bottom: 14px; display: flex; align-items: center; gap: 6px;
-  }
-  .canvas-wrap { position: relative; width: 100%; height: 260px; }
+    .card-header h3 {
+      font-size: 14px;
+      font-weight: 700;
+    }
 
-  .kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
-  .kpi-card {
-    background: var(--card); border-radius: 14px;
-    padding: 14px; box-shadow: var(--shadow);
-    border-top: 3px solid var(--blue);
-  }
-  .kpi-card.gold  { border-top-color: var(--gold); }
-  .kpi-card.green { border-top-color: var(--green); }
-  .kpi-card.red   { border-top-color: var(--red); }
-  .kpi-card.purple{ border-top-color: #7c3aed; }
-  .kpi-icon { font-size: 22px; margin-bottom: 4px; }
-  .kpi-val  { font-size: 20px; font-weight: 900; color: var(--navy); line-height: 1.1; }
-  .kpi-label{ font-size: 11px; color: var(--muted); font-weight: 600; margin-top: 3px; }
-  .kpi-sub  { font-size: 10px; color: var(--green); font-weight: 700; margin-top: 2px; }
+    .card-body {
+      padding: 16px;
+    }
 
-  .occ-row {
-    display: flex; align-items: center; gap: 10px;
-    padding: 10px 0; border-bottom: 1px solid var(--border);
-  }
-  .occ-row:last-child { border-bottom: none; }
-  .occ-name { font-size: 12px; font-weight: 700; color: var(--navy); min-width: 80px; }
-  .occ-bar-bg { flex: 1; background: var(--bg); border-radius: 20px; height: 10px; overflow: hidden; }
-  .occ-bar-fill { height: 100%; border-radius: 20px; transition: width .5s ease; }
-  .occ-pct { font-size: 12px; font-weight: 800; min-width: 36px; text-align: left; }
+    /* ── BOOKING CARDS ───────────────────────────── */
+    .booking-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 12px;
+      overflow: hidden;
+      border-right: 4px solid var(--blue);
+      transition: transform .15s;
+      cursor: pointer;
+    }
 
-  .period-tabs { display: flex; gap: 6px; margin-bottom: 14px; }
-  .period-tab {
-    flex: 1; padding: 8px; border-radius: 10px; font-size: 12px;
-    font-weight: 700; border: 2px solid var(--border);
-    background: var(--card); color: var(--muted);
-    cursor: pointer; font-family: 'Cairo', sans-serif; text-align: center;
-  }
-  .period-tab.active { background: var(--navy2); color: #fff; border-color: var(--navy2); }
+    .booking-card:active {
+      transform: scale(0.98);
+    }
 
-  .top-rooms-list .top-room-item {
-    display: flex; align-items: center; gap: 10px;
-    padding: 10px 0; border-bottom: 1px solid var(--border);
-  }
-  .top-rooms-list .top-room-item:last-child { border-bottom: none; }
-  .rank-badge {
-    width: 28px; height: 28px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px; font-weight: 900; color: #fff;
-    flex-shrink: 0;
-  }
-</style>
+    .booking-card.status-confirmed {
+      border-right-color: var(--green);
+    }
+
+    .booking-card.status-pending {
+      border-right-color: var(--orange);
+    }
+
+    .booking-card.status-cancelled {
+      border-right-color: var(--red);
+    }
+
+    .booking-card.status-checkout {
+      border-right-color: var(--blue);
+    }
+
+    .booking-card.status-done {
+      border-right-color: var(--muted);
+    }
+
+    .bc-header {
+      padding: 12px 14px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .bc-id {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .bc-status {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    .bc-name {
+      padding: 0 14px;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+
+    .bc-details {
+      padding: 8px 14px 12px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .bc-detail {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .bc-detail strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .bc-footer {
+      background: var(--bg);
+      padding: 10px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--border);
+    }
+
+    .bc-total {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--navy);
+    }
+
+    .bc-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-sm {
+      padding: 5px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      font-family: 'Cairo', sans-serif;
+      border: none;
+      cursor: pointer;
+      transition: all .15s;
+    }
+
+    .btn-edit {
+      background: var(--navy2);
+      color: #fff;
+    }
+
+    .btn-del {
+      background: #fee2e2;
+      color: var(--red);
+    }
+
+    /* ── FORM ────────────────────────────────────── */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    .form-input,
+    .form-select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 14px;
+      color: var(--text);
+      background: var(--card);
+      outline: none;
+      transition: border-color .2s;
+      -webkit-appearance: none;
+    }
+
+    .form-input:focus,
+    .form-select:focus {
+      border-color: var(--navy2);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .form-calc {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%);
+      border-radius: 10px;
+      padding: 12px 14px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .calc-item {
+      text-align: center;
+    }
+
+    .calc-label {
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.65);
+      font-weight: 600;
+    }
+
+    .calc-val {
+      font-size: 16px;
+      font-weight: 900;
+      color: var(--gold);
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, var(--navy2), var(--blue));
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: opacity .2s;
+    }
+
+    .btn-primary:active {
+      opacity: 0.85;
+    }
+
+    .btn-secondary {
+      width: 100%;
+      padding: 13px;
+      background: var(--bg);
+      color: var(--muted);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    /* ── CALENDAR ────────────────────────────────── */
+    .cal-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .cal-nav h2 {
+      font-size: 18px;
+      font-weight: 900;
+      color: var(--navy);
+    }
+
+    .cal-nav-btn {
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      width: 38px;
+      height: 38px;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--navy2);
+      font-weight: 900;
+    }
+
+    .room-type-header {
+      background: linear-gradient(90deg, var(--navy2), var(--blue));
+      color: #fff;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 7px 12px;
+      border-radius: 8px 8px 0 0;
+      margin-top: 14px;
+      margin-bottom: 0;
+    }
+
+    .cal-grid-wrap {
+      overflow-x: auto;
+    }
+
+    .cal-grid {
+      display: grid;
+      font-size: 11px;
+      min-width: 600px;
+    }
+
+    .cal-grid-header {
+      display: grid;
+      grid-template-columns: 90px repeat(31, 1fr);
+      background: #1e3a5f;
+      border-radius: 0;
+    }
+
+    .cal-grid-header div {
+      padding: 6px 2px;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 700;
+      font-size: 10px;
+    }
+
+    .cal-grid-header div:first-child {
+      color: #fff;
+      font-size: 11px;
+    }
+
+    .cal-row {
+      display: grid;
+      grid-template-columns: 90px repeat(31, 1fr);
+      border-bottom: 1px solid #e8edf2;
+    }
+
+    .cal-row:nth-child(even) {
+      background: #f8fafc;
+    }
+
+    .cal-room-label {
+      padding: 7px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--navy);
+      border-left: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      background: #f0f4fa;
+    }
+
+    .cal-cell {
+      border-left: 1px solid #e8edf2;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background .1s;
+      position: relative;
+    }
+
+    .cal-cell.weekend {
+      background: #fff7ed;
+    }
+
+    .cal-cell.booked {
+      background: var(--red);
+      color: #fff;
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .cal-cell.checkin {
+      background: #1d4ed8;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .cal-cell.checkout {
+      background: var(--green);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .cal-cell.cancelled {
+      background: #d1d5db;
+      color: #6b7280;
+      font-size: 12px;
+    }
+
+    .cal-cell.empty-day {
+      background: #f1f5f9;
+    }
+
+    .cal-cell:active {
+      opacity: 0.7;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .legend-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+    }
+
+    /* ── DASHBOARD ───────────────────────────────── */
+    .dash-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .dash-stat {
+      background: var(--card);
+      border-radius: 14px;
+      padding: 14px;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+
+    .dash-stat .ds-icon {
+      font-size: 26px;
+      margin-bottom: 4px;
+    }
+
+    .dash-stat .ds-val {
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--navy);
+    }
+
+    .dash-stat .ds-label {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    .dash-full {
+      grid-column: 1/-1;
+    }
+
+    .revenue-card {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%);
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .revenue-card .label {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .revenue-card .amount {
+      color: var(--gold);
+      font-size: 26px;
+      font-weight: 900;
+      margin-top: 4px;
+    }
+
+    .revenue-card .icon {
+      font-size: 40px;
+      opacity: 0.5;
+    }
+
+    /* ── UPCOMING ────────────────────────────────── */
+    .upcoming-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .upcoming-item:last-child {
+      border-bottom: none;
+    }
+
+    .up-date {
+      background: var(--navy2);
+      color: #fff;
+      border-radius: 10px;
+      padding: 6px 10px;
+      text-align: center;
+      min-width: 42px;
+      font-weight: 900;
+      font-size: 11px;
+      line-height: 1.4;
+    }
+
+    .up-info {
+      flex: 1;
+    }
+
+    .up-name {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--navy);
+    }
+
+    .up-room {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .up-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+
+    /* ── MODAL ───────────────────────────────────── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--card);
+      border-radius: 24px 24px 0 0;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 20px;
+      animation: slideUp .25s ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(60px);
+        opacity: 0;
+      }
+
+      to {
+        transform: none;
+        opacity: 1;
+      }
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .modal-header h2 {
+      font-size: 18px;
+      font-weight: 900;
+      color: var(--navy);
+    }
+
+    .modal-close {
+      background: var(--bg);
+      border: none;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 100px;
+      left: 16px;
+      right: 16px;
+      z-index: 400;
+      background: var(--navy);
+      color: #fff;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 14px;
+      font-weight: 700;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      transform: translateY(80px);
+      opacity: 0;
+      transition: all .3s;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      transform: none;
+      opacity: 1;
+    }
+
+    .filter-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .filter-chip {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      border: 2px solid var(--border);
+      background: var(--card);
+      color: var(--muted);
+      cursor: pointer;
+      white-space: nowrap;
+      font-family: 'Cairo', sans-serif;
+      transition: all .15s;
+    }
+
+    .filter-chip.active {
+      background: var(--navy2);
+      color: #fff;
+      border-color: var(--navy2);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--muted);
+    }
+
+    .empty-state .es-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+
+    .empty-state p {
+      font-size: 14px;
+    }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+      margin-top: 4px;
+    }
+
+    /* ── LOGIN PAGE ──────────────────────────────── */
+    .login-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: linear-gradient(135deg, #0f2444 0%, #1a3a6b 50%, #0f2444 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .login-overlay.hidden {
+      display: none;
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 380px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 24px;
+      padding: 32px 28px;
+      backdrop-filter: blur(20px);
+    }
+
+    .login-logo {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .login-logo .icon {
+      font-size: 52px;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .login-logo h1 {
+      color: #fff;
+      font-size: 24px;
+      font-weight: 900;
+      margin-bottom: 4px;
+    }
+
+    .login-logo p {
+      color: var(--gold);
+      font-size: 13px;
+      opacity: 0.9;
+    }
+
+    .login-input {
+      width: 100%;
+      padding: 14px 16px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      color: #fff;
+      font-family: 'Cairo', sans-serif;
+      font-size: 15px;
+      outline: none;
+      margin-bottom: 12px;
+      transition: border-color .2s;
+    }
+
+    .login-input::placeholder {
+      color: rgba(255, 255, 255, 0.45);
+    }
+
+    .login-input:focus {
+      border-color: var(--gold);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, var(--gold), #e8c76a);
+      color: var(--navy);
+      border: none;
+      border-radius: 12px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 16px;
+      font-weight: 900;
+      cursor: pointer;
+      margin-top: 4px;
+      transition: opacity .2s;
+    }
+
+    .login-btn:active {
+      opacity: 0.85;
+    }
+
+    .login-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .login-error {
+      background: rgba(220, 38, 38, 0.2);
+      border: 1px solid rgba(220, 38, 38, 0.4);
+      color: #fca5a5;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      display: none;
+      text-align: center;
+    }
+
+    .login-error.show {
+      display: block;
+    }
+
+    .logout-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: rgba(255, 255, 255, 0.8);
+      border-radius: 8px;
+      padding: 5px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: 'Cairo', sans-serif;
+      cursor: pointer;
+    }
+
+    /* ── REPORTS ─────────────────────────────────── */
+    .report-section {
+      margin-bottom: 20px;
+    }
+
+    .chart-wrap {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .chart-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .canvas-wrap {
+      position: relative;
+      width: 100%;
+      height: 260px;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .kpi-card {
+      background: var(--card);
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: var(--shadow);
+      border-top: 3px solid var(--blue);
+    }
+
+    .kpi-card.gold {
+      border-top-color: var(--gold);
+    }
+
+    .kpi-card.green {
+      border-top-color: var(--green);
+    }
+
+    .kpi-card.red {
+      border-top-color: var(--red);
+    }
+
+    .kpi-card.purple {
+      border-top-color: #7c3aed;
+    }
+
+    .kpi-icon {
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+
+    .kpi-val {
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--navy);
+      line-height: 1.1;
+    }
+
+    .kpi-label {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 600;
+      margin-top: 3px;
+    }
+
+    .kpi-sub {
+      font-size: 10px;
+      color: var(--green);
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .occ-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .occ-row:last-child {
+      border-bottom: none;
+    }
+
+    .occ-name {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--navy);
+      min-width: 80px;
+    }
+
+    .occ-bar-bg {
+      flex: 1;
+      background: var(--bg);
+      border-radius: 20px;
+      height: 10px;
+      overflow: hidden;
+    }
+
+    .occ-bar-fill {
+      height: 100%;
+      border-radius: 20px;
+      transition: width .5s ease;
+    }
+
+    .occ-pct {
+      font-size: 12px;
+      font-weight: 800;
+      min-width: 36px;
+      text-align: left;
+    }
+
+    .period-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .period-tab {
+      flex: 1;
+      padding: 8px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      border: 2px solid var(--border);
+      background: var(--card);
+      color: var(--muted);
+      cursor: pointer;
+      font-family: 'Cairo', sans-serif;
+      text-align: center;
+    }
+
+    .period-tab.active {
+      background: var(--navy2);
+      color: #fff;
+      border-color: var(--navy2);
+    }
+
+    .top-rooms-list .top-room-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .top-rooms-list .top-room-item:last-child {
+      border-bottom: none;
+    }
+
+    .rank-badge {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 900;
+      color: #fff;
+      flex-shrink: 0;
+    }
+  </style>
 </head>
+
 <body>
 
-<!-- LOGIN OVERLAY -->
-<div class="login-overlay" id="loginOverlay">
-  <div class="login-box">
-    <div class="login-logo">
-      <span class="icon">🏨</span>
-      <h1>فندق النصر</h1>
-      <p>نظام إدارة الحجوزات</p>
-    </div>
-    <div class="login-error" id="loginError">❌ بيانات خاطئة، حاول مرة تانية</div>
-    <input class="login-input" id="loginEmail" type="email" placeholder="البريد الإلكتروني" autocomplete="email">
-    <input class="login-input" id="loginPassword" type="password" placeholder="كلمة المرور" autocomplete="current-password">
-    <button class="login-btn" id="loginBtn" onclick="doLogin()">🔐 دخول</button>
-    <div style="text-align:center;margin-top:16px;color:rgba(255,255,255,0.4);font-size:11px;">
-      Hotel Management System
-    </div>
-  </div>
-</div>
-
-<!-- HEADER -->
-<div class="header">
-  <div class="header-top">
-    <h1>🏨 <span>فندق</span> النصر</h1>
-    <div style="color:var(--gold);font-size:12px;font-weight:700;" id="headerDate"></div>
-  </div>
-  <div style="display:flex;align-items:center;justify-content:space-between;">
-    <div class="header-sub">Hotel Reservation System</div>
-    <button class="logout-btn" onclick="doLogout()">خروج 🚪</button>
-  </div>
-  <div class="header-stats">
-    <div class="stat-pill"><span id="statConfirmed">0</span> مؤكد</div>
-    <div class="stat-pill"><span id="statPending">0</span> انتظار</div>
-    <div class="stat-pill"><span id="statRooms">15</span> غرفة</div>
-    <div class="stat-pill" id="connStatus" style="background:rgba(255,200,0,0.18);border-color:rgba(255,200,0,0.4)">
-      <span style="color:#fcd34d">⏳</span> جاري الاتصال
-    </div>
-  </div>
-</div>
-
-<!-- PAGES -->
-<div class="page active" id="page-home">
-  <div class="revenue-card">
-    <div>
-      <div class="label">إجمالي الإيرادات</div>
-      <div class="amount" id="totalRevenue">0 ج.م</div>
-      <div style="color:rgba(255,255,255,0.6);font-size:11px;margin-top:4px;" id="revenueCount"></div>
-    </div>
-    <div class="icon">💰</div>
-  </div>
-
-  <div class="dash-grid">
-    <div class="dash-stat">
-      <div class="ds-icon">📋</div>
-      <div class="ds-val" id="ds-total">0</div>
-      <div class="ds-label">إجمالي الحجوزات</div>
-    </div>
-    <div class="dash-stat">
-      <div class="ds-icon">✅</div>
-      <div class="ds-val" id="ds-confirmed">0</div>
-      <div class="ds-label">مؤكدة</div>
-    </div>
-    <div class="dash-stat">
-      <div class="ds-icon">⏳</div>
-      <div class="ds-val" id="ds-pending">0</div>
-      <div class="ds-label">في الانتظار</div>
-    </div>
-    <div class="dash-stat">
-      <div class="ds-icon">💳</div>
-      <div class="ds-val" id="ds-balance">0</div>
-      <div class="ds-label">ج.م متبقي</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-header">
-      <h3>📅 حجوزات قادمة</h3>
-      <span style="font-size:11px;color:var(--muted);" id="upcomingCount"></span>
-    </div>
-    <div class="card-body" id="upcomingList"></div>
-  </div>
-</div>
-
-<div class="page" id="page-bookings">
-  <div class="filter-bar">
-    <button class="filter-chip active" onclick="filterBookings('all',this)">الكل</button>
-    <button class="filter-chip" onclick="filterBookings('مؤكد ✅',this)">مؤكد ✅</button>
-    <button class="filter-chip" onclick="filterBookings('انتظار ⏳',this)">انتظار ⏳</button>
-    <button class="filter-chip" onclick="filterBookings('تسجيل خروج 🔑',this)">خروج 🔑</button>
-    <button class="filter-chip" onclick="filterBookings('ملغي ❌',this)">ملغي ❌</button>
-  </div>
-  <div id="bookingsList"></div>
-</div>
-
-<div class="page" id="page-add">
-  <div class="card">
-    <div class="card-header">
-      <h3 id="formTitle">➕ حجز جديد</h3>
-    </div>
-    <div class="card-body">
-      <input type="hidden" id="editId">
-      <div class="form-group">
-        <label class="form-label">👤 اسم النزيل</label>
-        <input class="form-input" id="f-name" placeholder="الاسم كاملاً...">
+  <!-- LOGIN OVERLAY -->
+  <div class="login-overlay" id="loginOverlay">
+    <div class="login-box">
+      <div class="login-logo">
+        <span class="icon">🏨</span>
+        <h1>فندق الرياض</h1>
+        <p>نظام إدارة الحجوزات</p>
       </div>
-      <div class="form-group">
-        <label class="form-label">📞 رقم الهاتف</label>
-        <input class="form-input" id="f-phone" type="tel" placeholder="01X-XXXX-XXXX">
+      <div class="login-error" id="loginError">❌ بيانات خاطئة، حاول مرة تانية</div>
+      <input class="login-input" id="loginEmail" type="email" placeholder="البريد الإلكتروني" autocomplete="email">
+      <input class="login-input" id="loginPassword" type="password" placeholder="كلمة المرور"
+        autocomplete="current-password">
+      <button class="login-btn" id="loginBtn" onclick="doLogin()">🔐 دخول</button>
+      <div style="text-align:center;margin-top:16px;color:rgba(255,255,255,0.4);font-size:11px;">
+        Hotel Management System
       </div>
-      <div class="form-row">
+    </div>
+  </div>
+
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-top">
+      <h1>🏨 <span>فندق</span> الرياض</h1>
+      <div style="color:var(--gold);font-size:12px;font-weight:700;" id="headerDate"></div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <div class="header-sub">Hotel Reservation System</div>
+      <button class="logout-btn" onclick="doLogout()">خروج 🚪</button>
+    </div>
+    <div class="header-stats">
+      <div class="stat-pill"><span id="statConfirmed">0</span> مؤكد</div>
+      <div class="stat-pill"><span id="statPending">0</span> انتظار</div>
+      <div class="stat-pill"><span id="statRooms">15</span> غرفة</div>
+      <div class="stat-pill" id="connStatus" style="background:rgba(255,200,0,0.18);border-color:rgba(255,200,0,0.4)">
+        <span style="color:#fcd34d">⏳</span> جاري الاتصال
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGES -->
+  <div class="page active" id="page-home">
+    <div class="revenue-card">
+      <div>
+        <div class="label">إجمالي الإيرادات</div>
+        <div class="amount" id="totalRevenue">0 ج.م</div>
+        <div style="color:rgba(255,255,255,0.6);font-size:11px;margin-top:4px;" id="revenueCount"></div>
+      </div>
+      <div class="icon">💰</div>
+    </div>
+
+    <div class="dash-grid">
+      <div class="dash-stat">
+        <div class="ds-icon">📋</div>
+        <div class="ds-val" id="ds-total">0</div>
+        <div class="ds-label">إجمالي الحجوزات</div>
+      </div>
+      <div class="dash-stat">
+        <div class="ds-icon">✅</div>
+        <div class="ds-val" id="ds-confirmed">0</div>
+        <div class="ds-label">مؤكدة</div>
+      </div>
+      <div class="dash-stat">
+        <div class="ds-icon">⏳</div>
+        <div class="ds-val" id="ds-pending">0</div>
+        <div class="ds-label">في الانتظار</div>
+      </div>
+      <div class="dash-stat">
+        <div class="ds-icon">💳</div>
+        <div class="ds-val" id="ds-balance">0</div>
+        <div class="ds-label">ج.م متبقي</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h3>📅 حجوزات قادمة</h3>
+        <span style="font-size:11px;color:var(--muted);" id="upcomingCount"></span>
+      </div>
+      <div class="card-body" id="upcomingList"></div>
+    </div>
+  </div>
+
+  <div class="page" id="page-bookings">
+    <div class="filter-bar">
+      <button class="filter-chip active" onclick="filterBookings('all',this)">الكل</button>
+      <button class="filter-chip" onclick="filterBookings('مؤكد ✅',this)">مؤكد ✅</button>
+      <button class="filter-chip" onclick="filterBookings('انتظار ⏳',this)">انتظار ⏳</button>
+      <button class="filter-chip" onclick="filterBookings('تسجيل خروج 🔑',this)">خروج 🔑</button>
+      <button class="filter-chip" onclick="filterBookings('ملغي ❌',this)">ملغي ❌</button>
+    </div>
+    <div id="bookingsList"></div>
+  </div>
+
+  <div class="page" id="page-add">
+    <div class="card">
+      <div class="card-header">
+        <h3 id="formTitle">➕ حجز جديد</h3>
+      </div>
+      <div class="card-body">
+        <input type="hidden" id="editId">
+        <div class="form-group">
+          <label class="form-label">👤 اسم النزيل</label>
+          <input class="form-input" id="f-name" placeholder="الاسم كاملاً...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">📞 رقم الهاتف</label>
+          <input class="form-input" id="f-phone" type="tel" placeholder="01X-XXXX-XXXX">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">🏠 نوع الغرفة</label>
+            <select class="form-select" id="f-rtype" onchange="onRoomTypeChange()">
+              <option value="">اختر...</option>
+              <option value="غرفة عادية">غرفة عادية (300 ج.م)</option>
+              <option value="غرفة مزدوجة">مزدوجة (450 ج.م)</option>
+              <option value="جناح صغير">جناح صغير (700 ج.م)</option>
+              <option value="جناح كبير">جناح كبير (1000 ج.م)</option>
+              <option value="جناح ملكي">جناح ملكي (1500 ج.م)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">🔑 رقم الغرفة</label>
+            <select class="form-select" id="f-rno">
+              <option value="">اختر النوع أولاً</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">📅 تاريخ الوصول</label>
+            <input class="form-input" id="f-checkin" type="date" oninput="calcNights()">
+          </div>
+          <div class="form-group">
+            <label class="form-label">📅 تاريخ المغادرة</label>
+            <input class="form-input" id="f-checkout" type="date" oninput="calcNights()">
+          </div>
+        </div>
+
+        <div class="form-calc">
+          <div class="calc-item">
+            <div class="calc-label">عدد الليالي</div>
+            <div class="calc-val" id="calc-nights">-</div>
+          </div>
+          <div class="calc-item">
+            <div class="calc-label">الإجمالي</div>
+            <div class="calc-val" id="calc-total">-</div>
+          </div>
+          <div class="calc-item">
+            <div class="calc-label">المتبقي</div>
+            <div class="calc-val" id="calc-balance">-</div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">💳 دفعة مقدمة</label>
+            <input class="form-input" id="f-deposit" type="number" placeholder="0" oninput="calcNights()">
+          </div>
+          <div class="form-group">
+            <label class="form-label">📊 الحالة</label>
+            <select class="form-select" id="f-status">
+              <option value="مؤكد ✅">مؤكد ✅</option>
+              <option value="انتظار ⏳">انتظار ⏳</option>
+              <option value="تسجيل خروج 🔑">تسجيل خروج 🔑</option>
+              <option value="مكتمل ✔️">مكتمل ✔️</option>
+              <option value="ملغي ❌">ملغي ❌</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">📝 ملاحظات</label>
+          <input class="form-input" id="f-notes" placeholder="أي ملاحظات...">
+        </div>
+
+        <button class="btn-primary" onclick="saveBooking()">💾 حفظ الحجز</button>
+        <button class="btn-secondary" onclick="clearForm()">✕ إلغاء</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="page" id="page-calendar">
+    <div class="cal-nav">
+      <button class="cal-nav-btn" onclick="changeMonth(-1)">▶</button>
+      <h2 id="calTitle"></h2>
+      <button class="cal-nav-btn" onclick="changeMonth(1)">◀</button>
+    </div>
+
+    <div id="calContent"></div>
+
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-dot" style="background:var(--red)"></div> محجوز
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:#1d4ed8"></div> وصول
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:var(--green)"></div> مغادرة
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:#d1d5db"></div> ملغي
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:#fff7ed;border:1px solid #fcd34d"></div> عطلة
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="page" id="page-reports">
+    <div class="period-tabs">
+      <button class="period-tab active" onclick="setPeriod('month',this)">هذا الشهر</button>
+      <button class="period-tab" onclick="setPeriod('quarter',this)">3 شهور</button>
+      <button class="period-tab" onclick="setPeriod('year',this)">هذا العام</button>
+      <button class="period-tab" onclick="setPeriod('all',this)">الكل</button>
+    </div>
+    <div id="reportsContent"></div>
+  </div>
+
+  <div class="page" id="page-rooms">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <div class="section-title" style="margin:0">🏠 إدارة الغرف</div>
+      <button class="btn-sm btn-edit" onclick="openRoomForm(null)" style="padding:8px 16px;font-size:13px;">+ إضافة
+        غرفة</button>
+    </div>
+    <div id="roomsList"></div>
+  </div>
+
+  <nav class="bottom-nav">
+    <button class="nav-btn active" onclick="showPage('home',this)">
+      <span class="icon">🏠</span> الرئيسية
+    </button>
+    <button class="nav-btn" onclick="showPage('bookings',this)">
+      <span class="icon">📋</span> الحجوزات
+    </button>
+    <button class="nav-btn nav-add" onclick="showPage('add',this)">
+      <span class="icon">➕</span> حجز جديد
+    </button>
+    <button class="nav-btn" onclick="showPage('calendar',this)">
+      <span class="icon">📅</span> التقويم
+    </button>
+    <button class="nav-btn" onclick="showPage('reports',this)">
+      <span class="icon">📊</span> تقارير
+    </button>
+    <button class="nav-btn" onclick="showPage('rooms',this)">
+      <span class="icon">🛏️</span> الغرف
+    </button>
+  </nav>
+
+  <!-- MODAL: Booking Detail -->
+  <div class="modal-overlay" id="detailModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modal-title">تفاصيل الحجز</h2>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+      </div>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- MODAL: Room Form -->
+  <div class="modal-overlay" id="roomModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="roomModalTitle">🛏️ إضافة غرفة</h2>
+        <button class="modal-close" onclick="closeRoomModal()">✕</button>
+      </div>
+      <div>
+        <input type="hidden" id="rf-id">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">🔑 رقم الغرفة</label>
+            <input class="form-input" id="rf-rno" placeholder="مثال: 101">
+          </div>
+          <div class="form-group">
+            <label class="form-label">🏢 الطابق</label>
+            <input class="form-input" id="rf-floor" placeholder="مثال: الأول">
+          </div>
+        </div>
         <div class="form-group">
           <label class="form-label">🏠 نوع الغرفة</label>
-          <select class="form-select" id="f-rtype" onchange="onRoomTypeChange()">
+          <select class="form-select" id="rf-rtype" onchange="onRoomTypeSelect()">
             <option value="">اختر...</option>
-            <option value="غرفة عادية">غرفة عادية (300 ج.م)</option>
-            <option value="غرفة مزدوجة">مزدوجة (450 ج.م)</option>
-            <option value="جناح صغير">جناح صغير (700 ج.م)</option>
-            <option value="جناح كبير">جناح كبير (1000 ج.م)</option>
-            <option value="جناح ملكي">جناح ملكي (1500 ج.م)</option>
+            <option value="غرفة عادية">غرفة عادية</option>
+            <option value="غرفة مزدوجة">غرفة مزدوجة</option>
+            <option value="جناح صغير">جناح صغير</option>
+            <option value="جناح كبير">جناح كبير</option>
+            <option value="جناح ملكي">جناح ملكي</option>
           </select>
         </div>
-        <div class="form-group">
-          <label class="form-label">🔑 رقم الغرفة</label>
-          <select class="form-select" id="f-rno">
-            <option value="">اختر النوع أولاً</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">📅 تاريخ الوصول</label>
-          <input class="form-input" id="f-checkin" type="date" oninput="calcNights()">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">💰 السعر / ليلة (ج.م)</label>
+            <input class="form-input" id="rf-price" type="number" placeholder="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label">👥 السعة</label>
+            <input class="form-input" id="rf-capacity" placeholder="مثال: 2 أشخاص">
+          </div>
         </div>
         <div class="form-group">
-          <label class="form-label">📅 تاريخ المغادرة</label>
-          <input class="form-input" id="f-checkout" type="date" oninput="calcNights()">
-        </div>
-      </div>
-
-      <div class="form-calc">
-        <div class="calc-item">
-          <div class="calc-label">عدد الليالي</div>
-          <div class="calc-val" id="calc-nights">-</div>
-        </div>
-        <div class="calc-item">
-          <div class="calc-label">الإجمالي</div>
-          <div class="calc-val" id="calc-total">-</div>
-        </div>
-        <div class="calc-item">
-          <div class="calc-label">المتبقي</div>
-          <div class="calc-val" id="calc-balance">-</div>
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">💳 دفعة مقدمة</label>
-          <input class="form-input" id="f-deposit" type="number" placeholder="0" oninput="calcNights()">
+          <label class="form-label">✨ المميزات</label>
+          <input class="form-input" id="rf-features" placeholder="مثال: واي فاي، تلفاز، مكيف...">
         </div>
         <div class="form-group">
           <label class="form-label">📊 الحالة</label>
-          <select class="form-select" id="f-status">
-            <option value="مؤكد ✅">مؤكد ✅</option>
-            <option value="انتظار ⏳">انتظار ⏳</option>
-            <option value="تسجيل خروج 🔑">تسجيل خروج 🔑</option>
-            <option value="مكتمل ✔️">مكتمل ✔️</option>
-            <option value="ملغي ❌">ملغي ❌</option>
+          <select class="form-select" id="rf-status">
+            <option value="متاح">متاح ✅</option>
+            <option value="صيانة">صيانة 🔧</option>
+            <option value="محجوز">محجوز 🔴</option>
           </select>
         </div>
+        <button class="btn-primary" onclick="saveRoom()">💾 حفظ الغرفة</button>
+        <button class="btn-secondary" onclick="closeRoomModal()">✕ إلغاء</button>
       </div>
-      <div class="form-group">
-        <label class="form-label">📝 ملاحظات</label>
-        <input class="form-input" id="f-notes" placeholder="أي ملاحظات...">
-      </div>
-
-      <button class="btn-primary" onclick="saveBooking()">💾 حفظ الحجز</button>
-      <button class="btn-secondary" onclick="clearForm()">✕ إلغاء</button>
     </div>
   </div>
-</div>
 
-<button class="cal-nav-btn" onclick="changeMonth(-1)">◀</button>
-<h2 id="calTitle"></h2>
-<button class="cal-nav-btn" onclick="changeMonth(1)">▶</button>
+  <script>
+    // ═══════════════════════════════════════════
+    // DATA
+    // ═══════════════════════════════════════════
+    const ROOM_MAP = {
+      "غرفة عادية": { rooms: ["101", "102", "103", "104", "105"], price: 300 },
+      "غرفة مزدوجة": { rooms: ["201", "202", "203", "204"], price: 450 },
+      "جناح صغير": { rooms: ["301", "302", "303"], price: 700 },
+      "جناح كبير": { rooms: ["401", "402"], price: 1000 },
+      "جناح ملكي": { rooms: ["501"], price: 1500 },
+    };
 
-  <div id="calContent"></div>
+    const ROOM_TYPES_ORDER = ["غرفة عادية", "غرفة مزدوجة", "جناح صغير", "جناح كبير", "جناح ملكي"];
+    const ROOM_COLORS = ["#2e7dd6", "#16a34a", "#7c3aed", "#ea580c", "#0d9488"];
 
-  <div class="legend">
-    <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div> محجوز</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#1d4ed8"></div> وصول</div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div> مغادرة</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#d1d5db"></div> ملغي</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#fff7ed;border:1px solid #fcd34d"></div> عطلة</div>
-  </div>
-</div>
+    const STATUS_STYLE = {
+      "مؤكد ✅": { bg: "#dcfce7", fg: "#166534", cls: "confirmed" },
+      "انتظار ⏳": { bg: "#fef9c3", fg: "#854d0e", cls: "pending" },
+      "ملغي ❌": { bg: "#fee2e2", fg: "#991b1b", cls: "cancelled" },
+      "تسجيل خروج 🔑": { bg: "#dbeafe", fg: "#1e40af", cls: "checkout" },
+      "مكتمل ✔️": { bg: "#f3f4f6", fg: "#374151", cls: "done" },
+    };
 
-<div class="page" id="page-reports">
-  <div class="period-tabs">
-    <button class="period-tab active" onclick="setPeriod('month',this)">هذا الشهر</button>
-    <button class="period-tab" onclick="setPeriod('quarter',this)">3 شهور</button>
-    <button class="period-tab" onclick="setPeriod('year',this)">هذا العام</button>
-    <button class="period-tab" onclick="setPeriod('all',this)">الكل</button>
-  </div>
-  <div id="reportsContent"></div>
-</div>
+    const MONTHS = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو",
+      "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
 
-<div class="page" id="page-rooms">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-    <div class="section-title" style="margin:0">🏠 إدارة الغرف</div>
-    <button class="btn-sm btn-edit" onclick="openRoomForm(null)" style="padding:8px 16px;font-size:13px;">+ إضافة غرفة</button>
-  </div>
-  <div id="roomsList"></div>
-</div>
-
-<nav class="bottom-nav">
-  <button class="nav-btn active" onclick="showPage('home',this)">
-    <span class="icon">🏠</span> الرئيسية
-  </button>
-  <button class="nav-btn" onclick="showPage('bookings',this)">
-    <span class="icon">📋</span> الحجوزات
-  </button>
-  <button class="nav-btn nav-add" onclick="showPage('add',this)">
-    <span class="icon">➕</span> حجز جديد
-  </button>
-  <button class="nav-btn" onclick="showPage('calendar',this)">
-    <span class="icon">📅</span> التقويم
-  </button>
-  <button class="nav-btn" onclick="showPage('reports',this)">
-    <span class="icon">📊</span> تقارير
-  </button>
-  <button class="nav-btn" onclick="showPage('rooms',this)">
-    <span class="icon">🛏️</span> الغرف
-  </button>
-</nav>
-
-<!-- MODAL: Booking Detail -->
-<div class="modal-overlay" id="detailModal">
-  <div class="modal">
-    <div class="modal-header">
-      <h2 id="modal-title">تفاصيل الحجز</h2>
-      <button class="modal-close" onclick="closeModal()">✕</button>
-    </div>
-    <div id="modal-body"></div>
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
-
-<!-- MODAL: Room Form -->
-<div class="modal-overlay" id="roomModal">
-  <div class="modal">
-    <div class="modal-header">
-      <h2 id="roomModalTitle">🛏️ إضافة غرفة</h2>
-      <button class="modal-close" onclick="closeRoomModal()">✕</button>
-    </div>
-    <div>
-      <input type="hidden" id="rf-id">
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">🔑 رقم الغرفة</label>
-          <input class="form-input" id="rf-rno" placeholder="مثال: 101">
-        </div>
-        <div class="form-group">
-          <label class="form-label">🏢 الطابق</label>
-          <input class="form-input" id="rf-floor" placeholder="مثال: الأول">
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">🏠 نوع الغرفة</label>
-        <select class="form-select" id="rf-rtype" onchange="onRoomTypeSelect()">
-          <option value="">اختر...</option>
-          <option value="غرفة عادية">غرفة عادية</option>
-          <option value="غرفة مزدوجة">غرفة مزدوجة</option>
-          <option value="جناح صغير">جناح صغير</option>
-          <option value="جناح كبير">جناح كبير</option>
-          <option value="جناح ملكي">جناح ملكي</option>
-        </select>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">💰 السعر / ليلة (ج.م)</label>
-          <input class="form-input" id="rf-price" type="number" placeholder="0">
-        </div>
-        <div class="form-group">
-          <label class="form-label">👥 السعة</label>
-          <input class="form-input" id="rf-capacity" placeholder="مثال: 2 أشخاص">
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">✨ المميزات</label>
-        <input class="form-input" id="rf-features" placeholder="مثال: واي فاي، تلفاز، مكيف...">
-      </div>
-      <div class="form-group">
-        <label class="form-label">📊 الحالة</label>
-        <select class="form-select" id="rf-status">
-          <option value="متاح">متاح ✅</option>
-          <option value="صيانة">صيانة 🔧</option>
-          <option value="محجوز">محجوز 🔴</option>
-        </select>
-      </div>
-      <button class="btn-primary" onclick="saveRoom()">💾 حفظ الغرفة</button>
-      <button class="btn-secondary" onclick="closeRoomModal()">✕ إلغاء</button>
-    </div>
-  </div>
-</div>
-
-<script>
-// ═══════════════════════════════════════════
-// DATA
-// ═══════════════════════════════════════════
-const ROOM_MAP = {
-  "غرفة عادية":   { rooms: ["101","102","103","104","105"], price: 300  },
-  "غرفة مزدوجة": { rooms: ["201","202","203","204"],       price: 450  },
-  "جناح صغير":   { rooms: ["301","302","303"],             price: 700  },
-  "جناح كبير":   { rooms: ["401","402"],                   price: 1000 },
-  "جناح ملكي":   { rooms: ["501"],                         price: 1500 },
-};
-
-const ROOM_TYPES_ORDER = ["غرفة عادية","غرفة مزدوجة","جناح صغير","جناح كبير","جناح ملكي"];
-const ROOM_COLORS = ["#2e7dd6","#16a34a","#7c3aed","#ea580c","#0d9488"];
-
-const STATUS_STYLE = {
-  "مؤكد ✅":         { bg: "#dcfce7", fg: "#166534", cls: "confirmed" },
-  "انتظار ⏳":        { bg: "#fef9c3", fg: "#854d0e", cls: "pending"   },
-  "ملغي ❌":          { bg: "#fee2e2", fg: "#991b1b", cls: "cancelled" },
-  "تسجيل خروج 🔑":   { bg: "#dbeafe", fg: "#1e40af", cls: "checkout"  },
-  "مكتمل ✔️":        { bg: "#f3f4f6", fg: "#374151", cls: "done"      },
-};
-
-const MONTHS = ["يناير","فبراير","مارس","أبريل","مايو","يونيو",
-                "يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
-
-// ═══════════════════════════════════════════
-// AUTH
-// ═══════════════════════════════════════════
-async function checkAuth() {
-  const { data: { session } } = await sb.auth.getSession();
-  if (session) { showApp(); } else { showLogin(); }
-}
-
-function showLogin() {
-  document.getElementById('loginOverlay').classList.remove('hidden');
-}
-
-function showApp() {
-  document.getElementById('loginOverlay').classList.add('hidden');
-  loadBookings();
-  loadRooms();
-  subscribeRealtime();
-  subscribeRoomsRealtime();
-  renderHome();
-}
-
-async function doLogin() {
-  const email    = document.getElementById('loginEmail').value.trim();
-  const password = document.getElementById('loginPassword').value;
-  const btn      = document.getElementById('loginBtn');
-  const errEl    = document.getElementById('loginError');
-
-  if (!email || !password) {
-    errEl.textContent = '⚠️ ادخل الإيميل وكلمة المرور';
-    errEl.classList.add('show'); return;
-  }
-
-  btn.disabled = true;
-  btn.textContent = '⏳ جاري الدخول...';
-  errEl.classList.remove('show');
-
-  const { error } = await sb.auth.signInWithPassword({ email, password });
-
-  if (error) {
-    errEl.textContent = '❌ بيانات خاطئة، حاول مرة تانية';
-    errEl.classList.add('show');
-    btn.disabled = false;
-    btn.textContent = '🔐 دخول';
-  } else {
-    showApp();
-  }
-}
-
-async function doLogout() {
-  if (!confirm('هل تريد تسجيل الخروج؟')) return;
-  await sb.auth.signOut();
-  bookings = [];
-  rooms = [];
-  if (realtimeChannel) sb.removeChannel(realtimeChannel);
-  showLogin();
-  showToast('👋 تم تسجيل الخروج');
-}
-
-document.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && !document.getElementById('loginOverlay').classList.contains('hidden')) {
-    doLogin();
-  }
-});
-
-// ═══════════════════════════════════════════
-// SUPABASE CONFIG
-// ═══════════════════════════════════════════
-const SUPABASE_URL  = 'https://qqlgbtbwqoamempkgurp.supabase.co';
-const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFxbGdidGJ3cW9hbWVtcGtndXJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwNTcxNzYsImV4cCI6MjA5NDYzMzE3Nn0.4Wf1tCeBAumWv-pBlLFHbNOU0f6bihQ4PGvdYRAU804';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-let bookings = [];
-let calYear = new Date().getFullYear();
-let calMonth = new Date().getMonth();
-let currentFilter = 'all';
-let editingId = null;
-let realtimeChannel = null;
-
-function setConnStatus(state) {
-  const el = document.getElementById('connStatus');
-  const states = {
-    connecting: { bg:'rgba(255,200,0,0.18)', border:'rgba(255,200,0,0.4)', html:'<span style="color:#fcd34d">⏳</span> جاري الاتصال' },
-    online:     { bg:'rgba(0,200,100,0.18)', border:'rgba(0,200,100,0.4)', html:'<span style="color:#4ade80">🟢</span> متصل' },
-    offline:    { bg:'rgba(255,80,80,0.18)',  border:'rgba(255,80,80,0.4)',  html:'<span style="color:#f87171">🔴</span> غير متصل' },
-  };
-  const s = states[state] || states.offline;
-  el.style.background   = s.bg;
-  el.style.borderColor  = s.border;
-  el.innerHTML          = s.html;
-}
-
-async function loadBookings() {
-  setConnStatus('connecting');
-  try {
-    const { data, error } = await sb.from('bookings').select('*').order('id');
-    if (error) throw error;
-    bookings = (data || []).map(mapFromDb);
-    setConnStatus('online');
-    if (bookings.length === 0) await seedSampleData();
-    renderCurrentPage();
-  } catch(e) {
-    console.error(e);
-    setConnStatus('offline');
-    showToast('⚠️ تعذر الاتصال بقاعدة البيانات');
-  }
-}
-
-function subscribeRealtime() {
-  realtimeChannel = sb.channel('bookings-changes')
-    .on('postgres_changes',
-      { event: '*', schema: 'public', table: 'bookings' },
-      payload => {
-        const { eventType, new: newRow, old: oldRow } = payload;
-        if (eventType === 'INSERT') {
-          const exists = bookings.find(b => b.id === newRow.id);
-          if (!exists) { bookings.unshift(mapFromDb(newRow)); renderCurrentPage(); }
-        } else if (eventType === 'UPDATE') {
-          const idx = bookings.findIndex(b => b.id === newRow.id);
-          const updated = mapFromDb(newRow);
-          if (idx !== -1) bookings[idx] = updated;
-          else bookings.unshift(updated);
-          renderCurrentPage();
-          showToast('🔄 تحديث من جهاز آخر');
-        } else if (eventType === 'DELETE') {
-          const existed = bookings.find(b => b.id === oldRow.id);
-          if (existed) { bookings = bookings.filter(b => b.id !== oldRow.id); renderCurrentPage(); }
-        }
+    // ═══════════════════════════════════════════
+    // AUTH — Login / Logout
+    // ═══════════════════════════════════════════
+    async function checkAuth() {
+      const { data: { session } } = await sb.auth.getSession();
+      if (session) {
+        showApp();
+      } else {
+        showLogin();
       }
-    )
-    .subscribe(status => {
-      if (status === 'SUBSCRIBED') setConnStatus('online');
-      if (status === 'CLOSED' || status === 'CHANNEL_ERROR') setConnStatus('offline');
+    }
+
+    function showLogin() {
+      document.getElementById('loginOverlay').classList.remove('hidden');
+    }
+
+    function showApp() {
+      document.getElementById('loginOverlay').classList.add('hidden');
+      loadBookings();
+      loadRooms();
+      subscribeRealtime();
+      subscribeRoomsRealtime();
+      renderHome();
+    }
+
+    async function doLogin() {
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      const btn = document.getElementById('loginBtn');
+      const errEl = document.getElementById('loginError');
+
+      if (!email || !password) {
+        errEl.textContent = '⚠️ ادخل الإيميل وكلمة المرور';
+        errEl.classList.add('show'); return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = '⏳ جاري الدخول...';
+      errEl.classList.remove('show');
+
+      const { error } = await sb.auth.signInWithPassword({ email, password });
+
+      if (error) {
+        errEl.textContent = '❌ بيانات خاطئة، حاول مرة تانية';
+        errEl.classList.add('show');
+        btn.disabled = false;
+        btn.textContent = '🔐 دخول';
+      } else {
+        showApp();
+      }
+    }
+
+    async function doLogout() {
+      if (!confirm('هل تريد تسجيل الخروج؟')) return;
+      await sb.auth.signOut();
+      bookings = [];
+      rooms = [];
+      if (realtimeChannel) sb.removeChannel(realtimeChannel);
+      showLogin();
+      showToast('👋 تم تسجيل الخروج');
+    }
+
+    // Login on Enter key
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !document.getElementById('loginOverlay').classList.contains('hidden')) {
+        doLogin();
+      }
     });
-}
 
-function mapFromDb(row) {
-  return {
-    id:       row.id,
-    name:     row.name     || '',
-    phone:    row.phone    || '',
-    rtype:    row.rtype    || '',
-    rno:      row.rno      || '',
-    checkin:  row.checkin  || '',
-    checkout: row.checkout || '',
-    price:    Number(row.price)   || 0,
-    deposit:  Number(row.deposit) || 0,
-    status:   row.status   || 'مؤكد ✅',
-    notes:    row.notes    || '',
-  };
-}
+    // ═══════════════════════════════════════════
+    // SUPABASE CONFIG
+    // ═══════════════════════════════════════════
+    const SUPABASE_URL = 'https://qqlgbtbwqoamempkgurp.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFxbGdidGJ3cW9hbWVtcGtndXJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwNTcxNzYsImV4cCI6MjA5NDYzMzE3Nn0.4Wf1tCeBAumWv-pBlLFHbNOU0f6bihQ4PGvdYRAU804';
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-async function seedSampleData() {
-  const y = new Date().getFullYear();
-  const samples = [
-    { id:"BK-001", name:"أحمد محمد علي",  phone:"0100-123-4567", rtype:"جناح كبير",   rno:"401", checkin:`${y}-01-15`, checkout:`${y}-01-20`, price:1000, deposit:2000, notes:"",           status:"مكتمل ✔️"        },
-    { id:"BK-002", name:"سارة إبراهيم",   phone:"0111-234-5678", rtype:"غرفة مزدوجة", rno:"201", checkin:`${y}-05-20`, checkout:`${y}-05-24`, price:450,  deposit:300,  notes:"",           status:"مؤكد ✅"          },
-    { id:"BK-003", name:"محمود حسن",      phone:"0122-345-6789", rtype:"غرفة عادية",  rno:"102", checkin:`${y}-05-22`, checkout:`${y}-05-26`, price:300,  deposit:200,  notes:"",           status:"مؤكد ✅"          },
-    { id:"BK-004", name:"نورا خالد",      phone:"0100-456-7890", rtype:"جناح صغير",   rno:"302", checkin:`${y}-06-10`, checkout:`${y}-06-15`, price:700,  deposit:1000, notes:"VIP",        status:"مؤكد ✅"          },
-    { id:"BK-005", name:"كريم عبدالله",   phone:"0111-567-8901", rtype:"جناح ملكي",   rno:"501", checkin:`${y}-07-01`, checkout:`${y}-07-07`, price:1500, deposit:3000, notes:"",           status:"انتظار ⏳"        },
-    { id:"BK-006", name:"لمياء فاروق",    phone:"0122-678-9012", rtype:"غرفة عادية",  rno:"103", checkin:`${y}-05-18`, checkout:`${y}-05-20`, price:300,  deposit:300,  notes:"",           status:"تسجيل خروج 🔑"   },
-    { id:"BK-007", name:"عمر سعيد",       phone:"0100-789-0123", rtype:"غرفة مزدوجة", rno:"202", checkin:`${y}-08-15`, checkout:`${y}-08-18`, price:450,  deposit:450,  notes:"",           status:"مؤكد ✅"          },
-    { id:"BK-008", name:"منى رضا",        phone:"0111-890-1234", rtype:"جناح كبير",   rno:"402", checkin:`${y}-04-20`, checkout:`${y}-04-25`, price:1000, deposit:0,    notes:"",           status:"ملغي ❌"          },
-    { id:"BK-009", name:"يوسف ناصر",      phone:"0122-901-2345", rtype:"جناح صغير",   rno:"303", checkin:`${y}-09-05`, checkout:`${y}-09-10`, price:700,  deposit:1500, notes:"",           status:"مؤكد ✅"          },
-    { id:"BK-010", name:"دينا حمدي",      phone:"0100-012-3456", rtype:"غرفة عادية",  rno:"101", checkin:`${y}-12-24`, checkout:`${y}-12-31`, price:300,  deposit:0,    notes:"رأس السنة",  status:"انتظار ⏳"        },
-  ];
-  const { error } = await sb.from('bookings').insert(samples);
-  if (!error) bookings = samples;
-}
+    let bookings = [];
+    let calYear = new Date().getFullYear();
+    let calMonth = new Date().getMonth();
+    let currentFilter = 'all';
+    let editingId = null;
+    let realtimeChannel = null;
 
-function renderCurrentPage() {
-  const active = document.querySelector('.page.active')?.id?.replace('page-','');
-  if (active === 'home')     renderHome();
-  if (active === 'bookings') renderBookings();
-  if (active === 'calendar') renderCalendar();
-  if (active === 'rooms')    renderRooms();
-  if (active === 'reports')  renderReports();
-}
+    // ── Connection Status UI ────────────────────
+    function setConnStatus(state) {
+      const el = document.getElementById('connStatus');
+      const states = {
+        connecting: { bg: 'rgba(255,200,0,0.18)', border: 'rgba(255,200,0,0.4)', html: '<span style="color:#fcd34d">⏳</span> جاري الاتصال' },
+        online: { bg: 'rgba(0,200,100,0.18)', border: 'rgba(0,200,100,0.4)', html: '<span style="color:#4ade80">🟢</span> متصل' },
+        offline: { bg: 'rgba(255,80,80,0.18)', border: 'rgba(255,80,80,0.4)', html: '<span style="color:#f87171">🔴</span> غير متصل' },
+      };
+      const s = states[state] || states.offline;
+      el.style.background = s.bg;
+      el.style.borderColor = s.border;
+      el.innerHTML = s.html;
+    }
 
-function nextId() {
-  const ids = bookings.map(b => parseInt(b.id.replace('BK-',''))).filter(n => !isNaN(n));
-  const max = ids.length ? Math.max(...ids) : 0;
-  return 'BK-' + String(max + 1).padStart(3, '0');
-}
+    // ── Load from Supabase ──────────────────────
+    async function loadBookings() {
+      setConnStatus('connecting');
+      try {
+        const { data, error } = await sb.from('bookings').select('*').order('id');
+        if (error) throw error;
+        bookings = (data || []).map(mapFromDb);
+        setConnStatus('online');
+        // Seed if empty
+        if (bookings.length === 0) await seedSampleData();
+        renderCurrentPage();
+      } catch (e) {
+        console.error(e);
+        setConnStatus('offline');
+        showToast('⚠️ تعذر الاتصال بقاعدة البيانات');
+      }
+    }
 
-function nights(ci, co) {
-  const d = (new Date(co) - new Date(ci)) / 86400000;
-  return isNaN(d) || d < 0 ? 0 : d;
-}
+    // ── Realtime Subscription ───────────────────
+    function subscribeRealtime() {
+      realtimeChannel = sb.channel('bookings-changes')
+        .on('postgres_changes',
+          { event: '*', schema: 'public', table: 'bookings' },
+          payload => {
+            const { eventType, new: newRow, old: oldRow } = payload;
+            // تجاهل الـ event لو احنا اللي عملناه (already updated locally)
+            if (eventType === 'INSERT') {
+              const exists = bookings.find(b => b.id === newRow.id);
+              if (!exists) { bookings.unshift(mapFromDb(newRow)); renderCurrentPage(); }
+            } else if (eventType === 'UPDATE') {
+              const idx = bookings.findIndex(b => b.id === newRow.id);
+              const updated = mapFromDb(newRow);
+              if (idx !== -1) bookings[idx] = updated;
+              else bookings.unshift(updated);
+              renderCurrentPage();
+              showToast('🔄 تحديث من جهاز آخر');
+            } else if (eventType === 'DELETE') {
+              const existed = bookings.find(b => b.id === oldRow.id);
+              if (existed) { bookings = bookings.filter(b => b.id !== oldRow.id); renderCurrentPage(); }
+            }
+          }
+        )
+        .subscribe(status => {
+          if (status === 'SUBSCRIBED') setConnStatus('online');
+          if (status === 'CLOSED' || status === 'CHANNEL_ERROR') setConnStatus('offline');
+        });
+    }
 
-function fmt(n) { return Number(n).toLocaleString('ar-EG') + ' ج.م'; }
+    // ── Map DB row → app object ─────────────────
+    function mapFromDb(row) {
+      return {
+        id: row.id,
+        name: row.name || '',
+        phone: row.phone || '',
+        rtype: row.rtype || '',
+        rno: row.rno || '',
+        checkin: row.checkin || '',
+        checkout: row.checkout || '',
+        price: Number(row.price) || 0,
+        deposit: Number(row.deposit) || 0,
+        status: row.status || 'مؤكد ✅',
+        notes: row.notes || '',
+      };
+    }
 
-// ═══════════════════════════════════════════
-// PAGES
-// ═══════════════════════════════════════════
-function showPage(name, btn) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('page-' + name).classList.add('active');
-  if (btn) btn.classList.add('active');
-  if (name === 'home')     renderHome();
-  if (name === 'bookings') renderBookings();
-  if (name === 'calendar') renderCalendar();
-  if (name === 'rooms')    renderRooms();
-  if (name === 'reports')  renderReports();
-  if (name === 'add' && !editingId) clearForm();
-}
+    // ── Seed sample data ────────────────────────
+    async function seedSampleData() {
+      const y = new Date().getFullYear();
+      const samples = [
+        { id: "BK-001", name: "أحمد محمد علي", phone: "0100-123-4567", rtype: "جناح كبير", rno: "401", checkin: `${y}-01-15`, checkout: `${y}-01-20`, price: 1000, deposit: 2000, notes: "", status: "مكتمل ✔️" },
+        { id: "BK-002", name: "سارة إبراهيم", phone: "0111-234-5678", rtype: "غرفة مزدوجة", rno: "201", checkin: `${y}-05-20`, checkout: `${y}-05-24`, price: 450, deposit: 300, notes: "", status: "مؤكد ✅" },
+        { id: "BK-003", name: "محمود حسن", phone: "0122-345-6789", rtype: "غرفة عادية", rno: "102", checkin: `${y}-05-22`, checkout: `${y}-05-26`, price: 300, deposit: 200, notes: "", status: "مؤكد ✅" },
+        { id: "BK-004", name: "نورا خالد", phone: "0100-456-7890", rtype: "جناح صغير", rno: "302", checkin: `${y}-06-10`, checkout: `${y}-06-15`, price: 700, deposit: 1000, notes: "VIP", status: "مؤكد ✅" },
+        { id: "BK-005", name: "كريم عبدالله", phone: "0111-567-8901", rtype: "جناح ملكي", rno: "501", checkin: `${y}-07-01`, checkout: `${y}-07-07`, price: 1500, deposit: 3000, notes: "", status: "انتظار ⏳" },
+        { id: "BK-006", name: "لمياء فاروق", phone: "0122-678-9012", rtype: "غرفة عادية", rno: "103", checkin: `${y}-05-18`, checkout: `${y}-05-20`, price: 300, deposit: 300, notes: "", status: "تسجيل خروج 🔑" },
+        { id: "BK-007", name: "عمر سعيد", phone: "0100-789-0123", rtype: "غرفة مزدوجة", rno: "202", checkin: `${y}-08-15`, checkout: `${y}-08-18`, price: 450, deposit: 450, notes: "", status: "مؤكد ✅" },
+        { id: "BK-008", name: "منى رضا", phone: "0111-890-1234", rtype: "جناح كبير", rno: "402", checkin: `${y}-04-20`, checkout: `${y}-04-25`, price: 1000, deposit: 0, notes: "", status: "ملغي ❌" },
+        { id: "BK-009", name: "يوسف ناصر", phone: "0122-901-2345", rtype: "جناح صغير", rno: "303", checkin: `${y}-09-05`, checkout: `${y}-09-10`, price: 700, deposit: 1500, notes: "", status: "مؤكد ✅" },
+        { id: "BK-010", name: "دينا حمدي", phone: "0100-012-3456", rtype: "غرفة عادية", rno: "101", checkin: `${y}-12-24`, checkout: `${y}-12-31`, price: 300, deposit: 0, notes: "رأس السنة", status: "انتظار ⏳" },
+      ];
+      const { error } = await sb.from('bookings').insert(samples);
+      if (!error) bookings = samples;
+    }
 
-// ═══════════════════════════════════════════
-// HOME / DASHBOARD
-// ═══════════════════════════════════════════
-function renderHome() {
-  const today = new Date().toISOString().slice(0,10);
-  const active = bookings.filter(b => b.status !== 'ملغي ❌');
-  const confirmed = bookings.filter(b => b.status === 'مؤكد ✅').length;
-  const pending   = bookings.filter(b => b.status === 'انتظار ⏳').length;
-  const revenue   = active.reduce((s,b) => s + nights(b.checkin,b.checkout)*b.price, 0);
-  const balTotal  = active.reduce((s,b) => {
-    const tot = nights(b.checkin,b.checkout)*b.price;
-    return s + Math.max(0, tot - (b.deposit||0));
-  }, 0);
+    // ── Render current visible page ─────────────
+    function renderCurrentPage() {
+      const active = document.querySelector('.page.active')?.id?.replace('page-', '');
+      if (active === 'home') renderHome();
+      if (active === 'bookings') renderBookings();
+      if (active === 'calendar') renderCalendar();
+      if (active === 'rooms') renderRooms();
+      if (active === 'reports') renderReports();
+    }
 
-  document.getElementById('headerDate').textContent = new Date().toLocaleDateString('ar-EG',{weekday:'short',month:'short',day:'numeric'});
-  document.getElementById('statConfirmed').textContent = confirmed;
-  document.getElementById('statPending').textContent   = pending;
-  document.getElementById('totalRevenue').textContent  = fmt(revenue);
-  document.getElementById('revenueCount').textContent  = active.length + ' حجز نشط';
-  document.getElementById('ds-total').textContent      = bookings.length;
-  document.getElementById('ds-confirmed').textContent  = confirmed;
-  document.getElementById('ds-pending').textContent    = pending;
-  document.getElementById('ds-balance').textContent    = Math.round(balTotal/1000) + 'K';
+    function nextId() {
+      const ids = bookings.map(b => parseInt(b.id.replace('BK-', ''))).filter(n => !isNaN(n));
+      const max = ids.length ? Math.max(...ids) : 0;
+      return 'BK-' + String(max + 1).padStart(3, '0');
+    }
 
-  const upcoming = bookings
-    .filter(b => b.status !== 'ملغي ❌' && b.checkin >= today)
-    .sort((a,b) => a.checkin.localeCompare(b.checkin))
-    .slice(0,6);
+    function nights(ci, co) {
+      const d = (new Date(co) - new Date(ci)) / 86400000;
+      return isNaN(d) || d < 0 ? 0 : d;
+    }
 
-  document.getElementById('upcomingCount').textContent = upcoming.length + ' حجز';
-  const ul = document.getElementById('upcomingList');
-  if (!upcoming.length) {
-    ul.innerHTML = '<div class="empty-state"><div class="es-icon">📭</div><p>لا توجد حجوزات قادمة</p></div>';
-    return;
-  }
-  ul.innerHTML = upcoming.map(b => {
-    const d = new Date(b.checkin);
-    const st = STATUS_STYLE[b.status] || STATUS_STYLE['مؤكد ✅'];
-    return `<div class="upcoming-item" onclick="openDetail('${b.id}')">
-      <div class="up-date">${d.getDate()}<br>${MONTHS[d.getMonth()].slice(0,3)}</div>
+    function fmt(n) { return Number(n).toLocaleString('ar-EG') + ' ج.م'; }
+
+    // ═══════════════════════════════════════════
+    // PAGES
+    // ═══════════════════════════════════════════
+    function showPage(name, btn) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('page-' + name).classList.add('active');
+      if (btn) btn.classList.add('active');
+      if (name === 'home') renderHome();
+      if (name === 'bookings') renderBookings();
+      if (name === 'calendar') renderCalendar();
+      if (name === 'rooms') renderRooms();
+      if (name === 'reports') renderReports();
+      if (name === 'add' && !editingId) clearForm();
+    }
+
+    // ═══════════════════════════════════════════
+    // HOME / DASHBOARD
+    // ═══════════════════════════════════════════
+    function renderHome() {
+      const today = new Date().toISOString().slice(0, 10);
+      const active = bookings.filter(b => b.status !== 'ملغي ❌');
+      const confirmed = bookings.filter(b => b.status === 'مؤكد ✅').length;
+      const pending = bookings.filter(b => b.status === 'انتظار ⏳').length;
+      const revenue = active.reduce((s, b) => s + nights(b.checkin, b.checkout) * b.price, 0);
+      const balTotal = active.reduce((s, b) => {
+        const tot = nights(b.checkin, b.checkout) * b.price;
+        return s + Math.max(0, tot - (b.deposit || 0));
+      }, 0);
+
+      document.getElementById('headerDate').textContent = new Date().toLocaleDateString('ar-EG', { weekday: 'short', month: 'short', day: 'numeric' });
+      document.getElementById('statConfirmed').textContent = confirmed;
+      document.getElementById('statPending').textContent = pending;
+      document.getElementById('totalRevenue').textContent = fmt(revenue);
+      document.getElementById('revenueCount').textContent = active.length + ' حجز نشط';
+      document.getElementById('ds-total').textContent = bookings.length;
+      document.getElementById('ds-confirmed').textContent = confirmed;
+      document.getElementById('ds-pending').textContent = pending;
+      document.getElementById('ds-balance').textContent = Math.round(balTotal / 1000) + 'K';
+
+      // Upcoming check-ins (next 30 days)
+      const upcoming = bookings
+        .filter(b => b.status !== 'ملغي ❌' && b.checkin >= today)
+        .sort((a, b) => a.checkin.localeCompare(b.checkin))
+        .slice(0, 6);
+
+      document.getElementById('upcomingCount').textContent = upcoming.length + ' حجز';
+      const ul = document.getElementById('upcomingList');
+      if (!upcoming.length) {
+        ul.innerHTML = '<div class="empty-state"><div class="es-icon">📭</div><p>لا توجد حجوزات قادمة</p></div>';
+        return;
+      }
+      ul.innerHTML = upcoming.map(b => {
+        const d = new Date(b.checkin);
+        const st = STATUS_STYLE[b.status] || STATUS_STYLE['مؤكد ✅'];
+        return `<div class="upcoming-item" onclick="openDetail('${b.id}')">
+      <div class="up-date">${d.getDate()}<br>${MONTHS[d.getMonth()].slice(0, 3)}</div>
       <div class="up-info">
         <div class="up-name">${b.name}</div>
         <div class="up-room">غرفة ${b.rno} • ${b.rtype}</div>
       </div>
       <span class="up-badge" style="background:${st.bg};color:${st.fg}">${b.status}</span>
     </div>`;
-  }).join('');
-}
+      }).join('');
+    }
 
-// ═══════════════════════════════════════════
-// BOOKINGS LIST
-// ═══════════════════════════════════════════
-function filterBookings(filter, btn) {
-  currentFilter = filter;
-  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-  btn.classList.add('active');
-  renderBookings();
-}
+    // ═══════════════════════════════════════════
+    // BOOKINGS LIST
+    // ═══════════════════════════════════════════
+    function filterBookings(filter, btn) {
+      currentFilter = filter;
+      document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      renderBookings();
+    }
 
-function renderBookings() {
-  const list = currentFilter === 'all'
-    ? bookings
-    : bookings.filter(b => b.status === currentFilter);
+    function renderBookings() {
+      const list = currentFilter === 'all'
+        ? bookings
+        : bookings.filter(b => b.status === currentFilter);
 
-  const el = document.getElementById('bookingsList');
-  if (!list.length) {
-    el.innerHTML = '<div class="empty-state"><div class="es-icon">📭</div><p>لا توجد حجوزات</p></div>';
-    return;
-  }
+      const el = document.getElementById('bookingsList');
+      if (!list.length) {
+        el.innerHTML = '<div class="empty-state"><div class="es-icon">📭</div><p>لا توجد حجوزات</p></div>';
+        return;
+      }
 
-  const sorted = [...list].sort((a,b) => b.id.localeCompare(a.id));
-  el.innerHTML = sorted.map(b => {
-    const n = nights(b.checkin, b.checkout);
-    const total = n * b.price;
-    const bal = Math.max(0, total - (b.deposit||0));
-    const st = STATUS_STYLE[b.status] || STATUS_STYLE['مؤكد ✅'];
-    return `
+      const sorted = [...list].sort((a, b) => b.id.localeCompare(a.id));
+      el.innerHTML = sorted.map(b => {
+        const n = nights(b.checkin, b.checkout);
+        const total = n * b.price;
+        const bal = Math.max(0, total - (b.deposit || 0));
+        const st = STATUS_STYLE[b.status] || STATUS_STYLE['مؤكد ✅'];
+        return `
     <div class="booking-card status-${st.cls}" onclick="openDetail('${b.id}')">
       <div class="bc-header">
         <span class="bc-id">${b.id}</span>
@@ -1109,400 +1813,403 @@ function renderBookings() {
         </div>
       </div>
     </div>`;
-  }).join('');
-}
+      }).join('');
+    }
 
-// ═══════════════════════════════════════════
-// FORM
-// ═══════════════════════════════════════════
-function onRoomTypeChange() {
-  const rt = document.getElementById('f-rtype').value;
-  const sel = document.getElementById('f-rno');
-  if (!rt) { sel.innerHTML = '<option value="">اختر النوع أولاً</option>'; return; }
-  const dbRooms = rooms.filter(r => r.rtype === rt && r.status !== 'صيانة');
-  if (dbRooms.length > 0) {
-    sel.innerHTML = dbRooms.map(r => `<option value="${r.rno}">غرفة ${r.rno} — ${Number(r.price).toLocaleString()} ج.م</option>`).join('');
-  } else if (ROOM_MAP[rt]) {
-    sel.innerHTML = ROOM_MAP[rt].rooms.map(r => `<option value="${r}">غرفة ${r}</option>`).join('');
-  } else {
-    sel.innerHTML = '<option value="">لا توجد غرف متاحة</option>';
-  }
-  calcNights();
-}
-
-function calcNights() {
-  const rt  = document.getElementById('f-rtype').value;
-  const rno = document.getElementById('f-rno').value;
-  const ci  = document.getElementById('f-checkin').value;
-  const co  = document.getElementById('f-checkout').value;
-  const dep = parseFloat(document.getElementById('f-deposit').value)||0;
-  const dbRoom = rooms.find(r => r.rno === rno && r.rtype === rt);
-  const price  = dbRoom ? Number(dbRoom.price) : (rt && ROOM_MAP[rt] ? ROOM_MAP[rt].price : 0);
-  const n = nights(ci, co);
-  const total = n * price;
-  const bal = Math.max(0, total - dep);
-  document.getElementById('calc-nights').textContent  = n || '-';
-  document.getElementById('calc-total').textContent   = total ? (total/1000)+'K' : '-';
-  document.getElementById('calc-balance').textContent = total ? (bal/1000)+'K' : '-';
-}
-
-function clearForm() {
-  editingId = null;
-  document.getElementById('formTitle').textContent = '➕ حجز جديد';
-  ['f-name','f-phone','f-deposit','f-notes'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('f-rtype').value  = '';
-  document.getElementById('f-rno').innerHTML = '<option value="">اختر النوع أولاً</option>';
-  document.getElementById('f-status').value = 'مؤكد ✅';
-  document.getElementById('f-checkin').value  = '';
-  document.getElementById('f-checkout').value = '';
-  ['calc-nights','calc-total','calc-balance'].forEach(id => document.getElementById(id).textContent = '-');
-}
-
-function editBooking(id) {
-  const b = bookings.find(x => x.id === id);
-  if (!b) return;
-  editingId = id;
-  showPage('add', document.querySelectorAll('.nav-btn')[2]);
-  document.getElementById('formTitle').textContent = '✏️ تعديل الحجز';
-  document.getElementById('f-name').value    = b.name;
-  document.getElementById('f-phone').value   = b.phone;
-  document.getElementById('f-rtype').value   = b.rtype;
-  onRoomTypeChange();
-  document.getElementById('f-rno').value     = b.rno;
-  document.getElementById('f-checkin').value  = b.checkin;
-  document.getElementById('f-checkout').value = b.checkout;
-  document.getElementById('f-deposit').value  = b.deposit;
-  document.getElementById('f-status').value   = b.status;
-  document.getElementById('f-notes').value    = b.notes;
-  calcNights();
-  closeModal();
-}
-
-async function saveBooking() {
-  const name    = document.getElementById('f-name').value.trim();
-  const phone   = document.getElementById('f-phone').value.trim();
-  const rtype   = document.getElementById('f-rtype').value;
-  const rno     = document.getElementById('f-rno').value;
-  const checkin = document.getElementById('f-checkin').value;
-  const checkout= document.getElementById('f-checkout').value;
-  const deposit = parseFloat(document.getElementById('f-deposit').value)||0;
-  const status  = document.getElementById('f-status').value;
-  const notes   = document.getElementById('f-notes').value.trim();
-
-  if (!name || !rtype || !rno || !checkin || !checkout) {
-    showToast('⚠️ يرجى ملء جميع الحقول الأساسية');
-    return;
-  }
-  if (new Date(checkout) <= new Date(checkin)) {
-    showToast('⚠️ تاريخ المغادرة يجب أن يكون بعد الوصول');
-    return;
-  }
-
-  // ══ FIX: التحقق من تعارض الحجوزات ══
-  const conflicting = bookings.find(b => {
-    if (b.status === 'ملغي ❌') return false;
-    if (b.rno !== rno) return false;
-    if (editingId && b.id === editingId) return false;
-    return checkin < b.checkout && checkout > b.checkin;
-  });
-
-  if (conflicting) {
-    const n = nights(conflicting.checkin, conflicting.checkout);
-    showToast(`⛔ غرفة ${rno} محجوزة من ${conflicting.checkin} إلى ${conflicting.checkout} (${n} ليالي) — ${conflicting.name}`);
-    return;
-  }
-  // ══════════════════════════════════════
-
-  const dbRoom = rooms.find(r => r.rno === rno && r.rtype === rtype);
-  const price  = dbRoom ? Number(dbRoom.price) : (ROOM_MAP[rtype]?.price || 0);
-  const entry = { name, phone, rtype, rno, checkin, checkout, price, deposit, status, notes };
-
-  if (editingId) {
-    const { error } = await sb.from('bookings').update(entry).eq('id', editingId);
-    if (error) { showToast('❌ خطأ في التحديث: ' + error.message); return; }
-    const idx = bookings.findIndex(b => b.id === editingId);
-    if (idx !== -1) bookings[idx] = { ...bookings[idx], ...entry };
-    showToast('✅ تم تحديث الحجز');
-  } else {
-    entry.id = nextId();
-    const { error } = await sb.from('bookings').insert(entry);
-    if (error) { showToast('❌ خطأ في الحفظ: ' + error.message); return; }
-    bookings.unshift(entry);
-    showToast('✅ تم إضافة الحجز');
-  }
-
-  clearForm();
-  showPage('bookings', document.querySelectorAll('.nav-btn')[1]);
-}
-
-async function deleteBooking(id) {
-  if (!confirm('هل تريد حذف هذا الحجز؟')) return;
-  const { error } = await sb.from('bookings').delete().eq('id', id);
-  if (error) { showToast('❌ خطأ في الحذف'); return; }
-  bookings = bookings.filter(b => b.id !== id);
-  closeModal();
-  renderCurrentPage();
-  showToast('🗑️ تم حذف الحجز');
-}
-
-// ═══════════════════════════════════════════
-// CALENDAR
-// ═══════════════════════════════════════════
-function changeMonth(dir) {
-  calMonth += dir;
-  if (calMonth > 11) { calMonth = 0; calYear++; }
-  if (calMonth < 0)  { calMonth = 11; calYear--; }
-  renderCalendar();
-}
-
-function renderCalendar() {
-  document.getElementById('calTitle').textContent = MONTHS[calMonth] + ' ' + calYear;
-  const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
-  const DAY_LABELS = ['أ','إ','ث','ر','خ','ج','س'];
-
-  let html = '';
-
-  const grouped = {};
-  rooms.forEach(r => {
-    if (!grouped[r.rtype]) grouped[r.rtype] = [];
-    grouped[r.rtype].push(r);
-  });
-
-  const rtypes = ROOM_TYPES_ORDER.filter(rt => grouped[rt]?.length > 0);
-
-  if (rtypes.length === 0) {
-    document.getElementById('calContent').innerHTML =
-      '<div class="empty-state"><div class="es-icon">🏨</div><p>لا توجد غرف — أضف غرف من تاب الغرف أولاً</p></div>';
-    return;
-  }
-
-  for (const [ti, rtype] of rtypes.entries()) {
-    const typeRooms = grouped[rtype].sort((a,b) => a.rno.localeCompare(b.rno));
-    const color = ROOM_TYPE_COLORS[rtype] || ROOM_COLORS[ti] || '#2e7dd6';
-
-    html += `<div class="room-type-header" style="background:linear-gradient(90deg,${color},${color}cc)">🏠 ${rtype} (${typeRooms.length} غرفة)</div>`;
-    html += '<div class="cal-grid-wrap"><div class="cal-grid">';
-
-    html += '<div class="cal-grid-header">';
-    html += '<div>الغرفة</div>';
-    for (let d = 1; d <= 31; d++) {
-      if (d <= daysInMonth) {
-        const dt = new Date(calYear, calMonth, d);
-        const isWE = dt.getDay() === 5 || dt.getDay() === 6;
-        html += `<div style="${isWE?'color:#fcd34d':''}">${d}<br><span style="font-size:8px">${DAY_LABELS[dt.getDay()]}</span></div>`;
+    // ═══════════════════════════════════════════
+    // FORM
+    // ═══════════════════════════════════════════
+    function onRoomTypeChange() {
+      const rt = document.getElementById('f-rtype').value;
+      const sel = document.getElementById('f-rno');
+      if (!rt) { sel.innerHTML = '<option value="">اختر النوع أولاً</option>'; return; }
+      // استخدم الغرف من Supabase لو موجودة، وإلا fallback للـ hardcoded
+      const dbRooms = rooms.filter(r => r.rtype === rt && r.status !== 'صيانة');
+      if (dbRooms.length > 0) {
+        sel.innerHTML = dbRooms.map(r => `<option value="${r.rno}">غرفة ${r.rno} — ${Number(r.price).toLocaleString()} ج.م</option>`).join('');
+      } else if (ROOM_MAP[rt]) {
+        sel.innerHTML = ROOM_MAP[rt].rooms.map(r => `<option value="${r}">غرفة ${r}</option>`).join('');
       } else {
-        html += '<div style="opacity:.3">-</div>';
+        sel.innerHTML = '<option value="">لا توجد غرف متاحة</option>';
       }
-    }
-    html += '</div>';
-
-    for (const room of typeRooms) {
-      const rno = room.rno;
-      const isMaintenance = room.status === 'صيانة';
-      html += '<div class="cal-row">';
-      html += `<div class="cal-room-label" style="${isMaintenance?'color:#854d0e;background:#fef9c3':''}">${rno}${isMaintenance?' 🔧':''}</div>`;
-
-      for (let d = 1; d <= 31; d++) {
-        if (d > daysInMonth) {
-          html += '<div class="cal-cell empty-day"></div>';
-          continue;
-        }
-        const dt = new Date(calYear, calMonth, d);
-        const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-        const isWE = dt.getDay() === 5 || dt.getDay() === 6;
-
-        if (isMaintenance) {
-          html += `<div class="cal-cell" style="background:#fef9c3;font-size:10px;color:#854d0e">🔧</div>`;
-          continue;
-        }
-
-        const booking = bookings.find(b => b.rno === rno && dateStr >= b.checkin && dateStr < b.checkout);
-
-        if (booking) {
-          const isCI = dateStr === booking.checkin;
-          const isCancelled = booking.status === 'ملغي ❌';
-          let cls = 'booked', lbl = '●';
-          if (isCancelled) { cls = 'cancelled'; lbl = '✕'; }
-else if (isCI)   { cls = 'checkin';   lbl = '←'; }          html += `<div class="cal-cell ${cls}" title="${booking.name}" onclick="openDetail('${booking.id}')">${lbl}</div>`;
-        } else {
-          html += `<div class="cal-cell ${isWE?'weekend':''}" onclick="quickAddFromCal('${rno}','${rtype}','${dateStr}')"></div>`;
-        }
-      }
-      html += '</div>';
+      calcNights();
     }
 
-    html += '</div></div>';
-  }
-  document.getElementById('calContent').innerHTML = html;
-}
+    function calcNights() {
+      const rt = document.getElementById('f-rtype').value;
+      const rno = document.getElementById('f-rno').value;
+      const ci = document.getElementById('f-checkin').value;
+      const co = document.getElementById('f-checkout').value;
+      const dep = parseFloat(document.getElementById('f-deposit').value) || 0;
+      // السعر من جدول الغرف أولاً، ثم fallback
+      const dbRoom = rooms.find(r => r.rno === rno && r.rtype === rt);
+      const price = dbRoom ? Number(dbRoom.price) : (rt && ROOM_MAP[rt] ? ROOM_MAP[rt].price : 0);
+      const n = nights(ci, co);
+      const total = n * price;
+      const bal = Math.max(0, total - dep);
+      document.getElementById('calc-nights').textContent = n || '-';
+      document.getElementById('calc-total').textContent = total ? (total / 1000) + 'K' : '-';
+      document.getElementById('calc-balance').textContent = total ? (bal / 1000) + 'K' : '-';
+    }
 
-function quickAddFromCal(rno, rtype, date) {
-  editingId = null;
-  document.getElementById('formTitle').textContent = '➕ حجز جديد';
-  document.getElementById('f-name').value    = '';
-  document.getElementById('f-phone').value   = '';
-  document.getElementById('f-rtype').value   = rtype;
-  onRoomTypeChange();
-  document.getElementById('f-rno').value     = rno;
-  document.getElementById('f-checkin').value  = date;
-  document.getElementById('f-checkout').value = '';
-  document.getElementById('f-deposit').value  = '';
-  document.getElementById('f-status').value   = 'مؤكد ✅';
-  document.getElementById('f-notes').value    = '';
-  calcNights();
-  showPage('add', document.querySelectorAll('.nav-btn')[2]);
-}
+    function clearForm() {
+      editingId = null;
+      document.getElementById('formTitle').textContent = '➕ حجز جديد';
+      ['f-name', 'f-phone', 'f-deposit', 'f-notes'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('f-rtype').value = '';
+      document.getElementById('f-rno').innerHTML = '<option value="">اختر النوع أولاً</option>';
+      document.getElementById('f-status').value = 'مؤكد ✅';
+      document.getElementById('f-checkin').value = '';
+      document.getElementById('f-checkout').value = '';
+      ['calc-nights', 'calc-total', 'calc-balance'].forEach(id => document.getElementById(id).textContent = '-');
+    }
 
-// ═══════════════════════════════════════════
-// MODAL DETAIL
-// ═══════════════════════════════════════════
-function openDetail(id) {
-  const b = bookings.find(x => x.id === id);
-  if (!b) return;
-  const n = nights(b.checkin, b.checkout);
-  const total = n * b.price;
-  const bal = Math.max(0, total - (b.deposit||0));
-  const st = STATUS_STYLE[b.status] || STATUS_STYLE['مؤكد ✅'];
+    function editBooking(id) {
+      const b = bookings.find(x => x.id === id);
+      if (!b) return;
+      editingId = id;
+      showPage('add', document.querySelectorAll('.nav-btn')[2]);
+      document.getElementById('formTitle').textContent = '✏️ تعديل الحجز';
+      document.getElementById('f-name').value = b.name;
+      document.getElementById('f-phone').value = b.phone;
+      document.getElementById('f-rtype').value = b.rtype;
+      onRoomTypeChange();
+      document.getElementById('f-rno').value = b.rno;
+      document.getElementById('f-checkin').value = b.checkin;
+      document.getElementById('f-checkout').value = b.checkout;
+      document.getElementById('f-deposit').value = b.deposit;
+      document.getElementById('f-status').value = b.status;
+      document.getElementById('f-notes').value = b.notes;
+      calcNights();
+      closeModal();
+    }
 
-  document.getElementById('modal-title').textContent = b.id + ' — ' + b.name;
-  document.getElementById('modal-body').innerHTML = `
+    async function saveBooking() {
+      const name = document.getElementById('f-name').value.trim();
+      const phone = document.getElementById('f-phone').value.trim();
+      const rtype = document.getElementById('f-rtype').value;
+      const rno = document.getElementById('f-rno').value;
+      const checkin = document.getElementById('f-checkin').value;
+      const checkout = document.getElementById('f-checkout').value;
+      const deposit = parseFloat(document.getElementById('f-deposit').value) || 0;
+      const status = document.getElementById('f-status').value;
+      const notes = document.getElementById('f-notes').value.trim();
+
+      if (!name || !rtype || !rno || !checkin || !checkout) {
+        showToast('⚠️ يرجى ملء جميع الحقول الأساسية');
+        return;
+      }
+      if (new Date(checkout) <= new Date(checkin)) {
+        showToast('⚠️ تاريخ المغادرة يجب أن يكون بعد الوصول');
+        return;
+      }
+
+      const dbRoom = rooms.find(r => r.rno === rno && r.rtype === rtype);
+      const price = dbRoom ? Number(dbRoom.price) : (ROOM_MAP[rtype]?.price || 0);
+      const entry = { name, phone, rtype, rno, checkin, checkout, price, deposit, status, notes };
+
+      if (editingId) {
+        const { error } = await sb.from('bookings').update(entry).eq('id', editingId);
+        if (error) { showToast('❌ خطأ في التحديث: ' + error.message); return; }
+        // حدّث local array فوراً
+        const idx = bookings.findIndex(b => b.id === editingId);
+        if (idx !== -1) bookings[idx] = { ...bookings[idx], ...entry };
+        showToast('✅ تم تحديث الحجز');
+      } else {
+        entry.id = nextId();
+        const { error } = await sb.from('bookings').insert(entry);
+        if (error) { showToast('❌ خطأ في الحفظ: ' + error.message); return; }
+        // أضف فوراً للـ local array
+        bookings.unshift(entry);
+        showToast('✅ تم إضافة الحجز');
+      }
+
+      clearForm();
+      showPage('bookings', document.querySelectorAll('.nav-btn')[1]);
+    }
+
+    async function deleteBooking(id) {
+      if (!confirm('هل تريد حذف هذا الحجز؟')) return;
+      const { error } = await sb.from('bookings').delete().eq('id', id);
+      if (error) { showToast('❌ خطأ في الحذف'); return; }
+      // احذف من local array فوراً
+      bookings = bookings.filter(b => b.id !== id);
+      closeModal();
+      renderCurrentPage();
+      showToast('🗑️ تم حذف الحجز');
+    }
+
+    // ═══════════════════════════════════════════
+    // CALENDAR
+    // ═══════════════════════════════════════════
+    function changeMonth(dir) {
+      calMonth += dir;
+      if (calMonth > 11) { calMonth = 0; calYear++; }
+      if (calMonth < 0) { calMonth = 11; calYear--; }
+      renderCalendar();
+    }
+
+    function renderCalendar() {
+      document.getElementById('calTitle').textContent = MONTHS[calMonth] + ' ' + calYear;
+      const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+      const DAY_LABELS = ['أ', 'إ', 'ث', 'ر', 'خ', 'ج', 'س'];
+
+      let html = '';
+
+      // استخدم الغرف من Supabase — مجمعة حسب النوع
+      const grouped = {};
+      rooms.forEach(r => {
+        if (!grouped[r.rtype]) grouped[r.rtype] = [];
+        grouped[r.rtype].push(r);
+      });
+
+      // رتب حسب الترتيب المعروف
+      const rtypes = ROOM_TYPES_ORDER.filter(rt => grouped[rt]?.length > 0);
+
+      if (rtypes.length === 0) {
+        document.getElementById('calContent').innerHTML =
+          '<div class="empty-state"><div class="es-icon">🏨</div><p>لا توجد غرف — أضف غرف من تاب الغرف أولاً</p></div>';
+        return;
+      }
+
+      for (const [ti, rtype] of rtypes.entries()) {
+        const typeRooms = grouped[rtype].sort((a, b) => a.rno.localeCompare(b.rno));
+        const color = ROOM_TYPE_COLORS[rtype] || ROOM_COLORS[ti] || '#2e7dd6';
+
+        html += `<div class="room-type-header" style="background:linear-gradient(90deg,${color},${color}cc)">🏠 ${rtype} (${typeRooms.length} غرفة)</div>`;
+        html += '<div class="cal-grid-wrap"><div class="cal-grid">';
+
+        // header row
+        html += '<div class="cal-grid-header">';
+        html += '<div>الغرفة</div>';
+        for (let d = 1; d <= 31; d++) {
+          if (d <= daysInMonth) {
+            const dt = new Date(calYear, calMonth, d);
+            const isWE = dt.getDay() === 5 || dt.getDay() === 6;
+            html += `<div style="${isWE ? 'color:#fcd34d' : ''}">${d}<br><span style="font-size:8px">${DAY_LABELS[dt.getDay()]}</span></div>`;
+          } else {
+            html += '<div style="opacity:.3">-</div>';
+          }
+        }
+        html += '</div>';
+
+        // room rows — من Supabase
+        for (const room of typeRooms) {
+          const rno = room.rno;
+          const isMaintenance = room.status === 'صيانة';
+          html += '<div class="cal-row">';
+          html += `<div class="cal-room-label" style="${isMaintenance ? 'color:#854d0e;background:#fef9c3' : ''}">${rno}${isMaintenance ? ' 🔧' : ''}</div>`;
+
+          for (let d = 1; d <= 31; d++) {
+            if (d > daysInMonth) {
+              html += '<div class="cal-cell empty-day"></div>';
+              continue;
+            }
+            const dt = new Date(calYear, calMonth, d);
+            const dateStr = `${calYear}-${String(calMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+            const isWE = dt.getDay() === 5 || dt.getDay() === 6;
+
+            if (isMaintenance) {
+              html += `<div class="cal-cell" style="background:#fef9c3;font-size:10px;color:#854d0e">🔧</div>`;
+              continue;
+            }
+
+            const booking = bookings.find(b => b.rno === rno && dateStr >= b.checkin && dateStr < b.checkout);
+
+            if (booking) {
+              const isCI = dateStr === booking.checkin;
+              const isCancelled = booking.status === 'ملغي ❌';
+              let cls = 'booked', lbl = '●';
+              if (isCancelled) { cls = 'cancelled'; lbl = '✕'; }
+              else if (isCI) { cls = 'checkin'; lbl = '←'; } html += `<div class="cal-cell ${cls}" title="${booking.name}" onclick="openDetail('${booking.id}')">${lbl}</div>`;
+            } else {
+              html += `<div class="cal-cell ${isWE ? 'weekend' : ''}" onclick="quickAddFromCal('${rno}','${rtype}','${dateStr}')"></div>`;
+            }
+          }
+          html += '</div>';
+        }
+
+        html += '</div></div>';
+      }
+      document.getElementById('calContent').innerHTML = html;
+    }
+
+    function quickAddFromCal(rno, rtype, date) {
+      editingId = null;
+      document.getElementById('formTitle').textContent = '➕ حجز جديد';
+      document.getElementById('f-name').value = '';
+      document.getElementById('f-phone').value = '';
+      document.getElementById('f-rtype').value = rtype;
+      onRoomTypeChange();
+      document.getElementById('f-rno').value = rno;
+      document.getElementById('f-checkin').value = date;
+      document.getElementById('f-checkout').value = '';
+      document.getElementById('f-deposit').value = '';
+      document.getElementById('f-status').value = 'مؤكد ✅';
+      document.getElementById('f-notes').value = '';
+      calcNights();
+      showPage('add', document.querySelectorAll('.nav-btn')[2]);
+    }
+
+    // ═══════════════════════════════════════════
+    // MODAL DETAIL
+    // ═══════════════════════════════════════════
+    function openDetail(id) {
+      const b = bookings.find(x => x.id === id);
+      if (!b) return;
+      const n = nights(b.checkin, b.checkout);
+      const total = n * b.price;
+      const bal = Math.max(0, total - (b.deposit || 0));
+      const st = STATUS_STYLE[b.status] || STATUS_STYLE['مؤكد ✅'];
+
+      document.getElementById('modal-title').textContent = b.id + ' — ' + b.name;
+      document.getElementById('modal-body').innerHTML = `
     <div style="display:flex;justify-content:center;margin-bottom:16px;">
       <span style="background:${st.bg};color:${st.fg};padding:8px 20px;border-radius:20px;font-weight:800;font-size:14px">${b.status}</span>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
-      ${detail('👤','النزيل',b.name)}
-      ${detail('📞','الهاتف',b.phone)}
-      ${detail('🏠','الغرفة','غرفة '+b.rno)}
-      ${detail('📌','النوع',b.rtype)}
-      ${detail('📅','وصول',b.checkin)}
-      ${detail('📅','مغادرة',b.checkout)}
-      ${detail('🌙','الليالي',n+' ليلة')}
-      ${detail('💰','سعر الليلة',fmt(b.price))}
+      ${detail('👤', 'النزيل', b.name)}
+      ${detail('📞', 'الهاتف', b.phone)}
+      ${detail('🏠', 'الغرفة', 'غرفة ' + b.rno)}
+      ${detail('📌', 'النوع', b.rtype)}
+      ${detail('📅', 'وصول', b.checkin)}
+      ${detail('📅', 'مغادرة', b.checkout)}
+      ${detail('🌙', 'الليالي', n + ' ليلة')}
+      ${detail('💰', 'سعر الليلة', fmt(b.price))}
     </div>
     <div style="background:linear-gradient(135deg,#0f2444,#1a3a6b);border-radius:12px;padding:14px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px;text-align:center;">
       <div><div style="color:rgba(255,255,255,0.65);font-size:10px;font-weight:600">الإجمالي</div><div style="color:#c9a84c;font-size:15px;font-weight:900">${fmt(total)}</div></div>
-      <div><div style="color:rgba(255,255,255,0.65);font-size:10px;font-weight:600">الدفعة</div><div style="color:#4ade80;font-size:15px;font-weight:900">${fmt(b.deposit||0)}</div></div>
-      <div><div style="color:rgba(255,255,255,0.65);font-size:10px;font-weight:600">المتبقي</div><div style="color:${bal>0?'#f87171':'#4ade80'};font-size:15px;font-weight:900">${fmt(bal)}</div></div>
+      <div><div style="color:rgba(255,255,255,0.65);font-size:10px;font-weight:600">الدفعة</div><div style="color:#4ade80;font-size:15px;font-weight:900">${fmt(b.deposit || 0)}</div></div>
+      <div><div style="color:rgba(255,255,255,0.65);font-size:10px;font-weight:600">المتبقي</div><div style="color:${bal > 0 ? '#f87171' : '#4ade80'};font-size:15px;font-weight:900">${fmt(bal)}</div></div>
     </div>
-    ${b.notes?`<div style="background:#f8f9fa;border-radius:10px;padding:10px 12px;margin-bottom:16px;font-size:13px;color:#555;">📝 ${b.notes}</div>`:''}
+    ${b.notes ? `<div style="background:#f8f9fa;border-radius:10px;padding:10px 12px;margin-bottom:16px;font-size:13px;color:#555;">📝 ${b.notes}</div>` : ''}
     <button class="btn-primary" onclick="editBooking('${b.id}')">✏️ تعديل الحجز</button>
     <button class="btn-secondary" style="color:var(--red);border-color:#fca5a5" onclick="deleteBooking('${b.id}')">🗑️ حذف الحجز</button>
   `;
-  document.getElementById('detailModal').classList.add('open');
-}
+      document.getElementById('detailModal').classList.add('open');
+    }
 
-function detail(icon, label, val) {
-  return `<div style="background:#f8fafc;border-radius:10px;padding:10px;">
+    function detail(icon, label, val) {
+      return `<div style="background:#f8fafc;border-radius:10px;padding:10px;">
     <div style="font-size:10px;color:#64748b;font-weight:600">${icon} ${label}</div>
     <div style="font-size:13px;font-weight:800;color:#1e293b;margin-top:3px">${val}</div>
   </div>`;
-}
-
-function closeModal() {
-  document.getElementById('detailModal').classList.remove('open');
-}
-
-document.getElementById('detailModal').addEventListener('click', function(e) {
-  if (e.target === this) closeModal();
-});
-
-// ═══════════════════════════════════════════
-// TOAST
-// ═══════════════════════════════════════════
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2800);
-}
-
-// ═══════════════════════════════════════════
-// REPORTS
-// ═══════════════════════════════════════════
-let reportPeriod = 'month';
-
-function setPeriod(period, btn) {
-  reportPeriod = period;
-  document.querySelectorAll('.period-tab').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderReports();
-}
-
-function getFilteredBookings() {
-  const now   = new Date();
-  const year  = now.getFullYear();
-  const month = now.getMonth();
-  return bookings.filter(b => {
-    if (b.status === 'ملغي ❌') return false;
-    const d = new Date(b.checkin);
-    if (reportPeriod === 'month')   return d.getFullYear() === year && d.getMonth() === month;
-    if (reportPeriod === 'quarter') {
-      const q = Math.floor(month / 3);
-      return d.getFullYear() === year && Math.floor(d.getMonth() / 3) === q;
     }
-    if (reportPeriod === 'year')    return d.getFullYear() === year;
-    return true;
-  });
-}
 
-function calcTotal(b) {
-  const n = (new Date(b.checkout) - new Date(b.checkin)) / 86400000;
-  return Math.max(0, n) * Number(b.price);
-}
+    function closeModal() {
+      document.getElementById('detailModal').classList.remove('open');
+    }
 
-function renderReports() {
-  const filtered  = getFilteredBookings();
-  const allActive = bookings.filter(b => b.status !== 'ملغي ❌');
-  const now    = new Date();
-  const year   = now.getFullYear();
-  const month  = now.getMonth();
+    document.getElementById('detailModal').addEventListener('click', function (e) {
+      if (e.target === this) closeModal();
+    });
 
-  const totalRev   = filtered.reduce((s,b) => s + calcTotal(b), 0);
-  const totalDep   = filtered.reduce((s,b) => s + Number(b.deposit||0), 0);
-  const totalBal   = filtered.reduce((s,b) => s + Math.max(0, calcTotal(b) - Number(b.deposit||0)), 0);
-  const confirmed  = filtered.filter(b => b.status === 'مؤكد ✅').length;
-  const avgRevPerB = filtered.length ? Math.round(totalRev / filtered.length) : 0;
-  const totalNights = filtered.reduce((s,b) => s + Math.max(0,(new Date(b.checkout)-new Date(b.checkin))/86400000), 0);
+    // ═══════════════════════════════════════════
+    // TOAST
+    // ═══════════════════════════════════════════
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2800);
+    }
 
-  const daysInPeriod = reportPeriod === 'month' ? new Date(year, month+1, 0).getDate()
-    : reportPeriod === 'quarter' ? 91 : reportPeriod === 'year' ? 365 : 365;
 
-  const occByType = {};
-  ROOM_TYPES_ORDER.forEach(rt => {
-    const typeRooms = rooms.filter(r => r.rtype === rt);
-    if (!typeRooms.length) return;
-    const totalDays = typeRooms.length * daysInPeriod;
-    const occupied  = filtered.filter(b => b.rtype === rt)
-      .reduce((s,b) => s + Math.max(0,(new Date(b.checkout)-new Date(b.checkin))/86400000), 0);
-    occByType[rt] = { pct: Math.min(100, Math.round(occupied/totalDays*100)), count: typeRooms.length };
-  });
 
-  const monthlyRev = [];
-  for (let i = 5; i >= 0; i--) {
-    const d   = new Date(year, month - i, 1);
-    const m   = d.getMonth(), y = d.getFullYear();
-    const rev = allActive.filter(b => {
-      const bd = new Date(b.checkin);
-      return bd.getFullYear() === y && bd.getMonth() === m;
-    }).reduce((s,b) => s + calcTotal(b), 0);
-    monthlyRev.push({ label: MONTHS[m].slice(0,3), rev, current: i === 0 });
-  }
+    // ═══════════════════════════════════════════
+    // REPORTS
+    // ═══════════════════════════════════════════
+    let reportPeriod = 'month';
 
-  const roomRev = {};
-  filtered.forEach(b => { roomRev[b.rno] = (roomRev[b.rno]||0) + calcTotal(b); });
-  const topRooms = Object.entries(roomRev).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    function setPeriod(period, btn) {
+      reportPeriod = period;
+      document.querySelectorAll('.period-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderReports();
+    }
 
-  const statuses  = ['مؤكد ✅','انتظار ⏳','تسجيل خروج 🔑','مكتمل ✔️'];
-  const statusData = statuses.map(s => ({
-    label: s, count: filtered.filter(b => b.status === s).length,
-    ...(STATUS_STYLE[s] || {bg:'#eee', fg:'#333'})
-  })).filter(s => s.count > 0);
+    function getFilteredBookings() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = now.getMonth();
+      return bookings.filter(b => {
+        if (b.status === 'ملغي ❌') return false;
+        const d = new Date(b.checkin);
+        if (reportPeriod === 'month') return d.getFullYear() === year && d.getMonth() === month;
+        if (reportPeriod === 'quarter') {
+          const q = Math.floor(month / 3);
+          return d.getFullYear() === year && Math.floor(d.getMonth() / 3) === q;
+        }
+        if (reportPeriod === 'year') return d.getFullYear() === year;
+        return true; // all
+      });
+    }
 
-  document.getElementById('reportsContent').innerHTML = `
+    function calcTotal(b) {
+      const n = (new Date(b.checkout) - new Date(b.checkin)) / 86400000;
+      return Math.max(0, n) * Number(b.price);
+    }
+
+    function renderReports() {
+      const filtered = getFilteredBookings();
+      const allActive = bookings.filter(b => b.status !== 'ملغي ❌');
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = now.getMonth();
+
+      // KPIs
+      const totalRev = filtered.reduce((s, b) => s + calcTotal(b), 0);
+      const totalDep = filtered.reduce((s, b) => s + Number(b.deposit || 0), 0);
+      const totalBal = filtered.reduce((s, b) => s + Math.max(0, calcTotal(b) - Number(b.deposit || 0)), 0);
+      const confirmed = filtered.filter(b => b.status === 'مؤكد ✅').length;
+      const avgRevPerB = filtered.length ? Math.round(totalRev / filtered.length) : 0;
+      const totalNights = filtered.reduce((s, b) => s + Math.max(0, (new Date(b.checkout) - new Date(b.checkin)) / 86400000), 0);
+
+      // Occupancy per room type
+      const daysInPeriod = reportPeriod === 'month' ? new Date(year, month + 1, 0).getDate()
+        : reportPeriod === 'quarter' ? 91 : reportPeriod === 'year' ? 365 : 365;
+
+      const occByType = {};
+      ROOM_TYPES_ORDER.forEach(rt => {
+        const typeRooms = rooms.filter(r => r.rtype === rt);
+        if (!typeRooms.length) return;
+        const totalDays = typeRooms.length * daysInPeriod;
+        const occupied = filtered.filter(b => b.rtype === rt)
+          .reduce((s, b) => s + Math.max(0, (new Date(b.checkout) - new Date(b.checkin)) / 86400000), 0);
+        occByType[rt] = { pct: Math.min(100, Math.round(occupied / totalDays * 100)), count: typeRooms.length };
+      });
+
+      // Monthly revenue last 6 months
+      const monthlyRev = [];
+      for (let i = 5; i >= 0; i--) {
+        const d = new Date(year, month - i, 1);
+        const m = d.getMonth(), y = d.getFullYear();
+        const rev = allActive.filter(b => {
+          const bd = new Date(b.checkin);
+          return bd.getFullYear() === y && bd.getMonth() === m;
+        }).reduce((s, b) => s + calcTotal(b), 0);
+        monthlyRev.push({ label: MONTHS[m].slice(0, 3), rev, current: i === 0 });
+      }
+
+      // Top rooms
+      const roomRev = {};
+      filtered.forEach(b => { roomRev[b.rno] = (roomRev[b.rno] || 0) + calcTotal(b); });
+      const topRooms = Object.entries(roomRev).sort((a, b) => b[1] - a[1]).slice(0, 5);
+
+      // Status breakdown
+      const statuses = ['مؤكد ✅', 'انتظار ⏳', 'تسجيل خروج 🔑', 'مكتمل ✔️'];
+      const statusData = statuses.map(s => ({
+        label: s, count: filtered.filter(b => b.status === s).length,
+        ...(STATUS_STYLE[s] || { bg: '#eee', fg: '#333' })
+      })).filter(s => s.count > 0);
+
+      const rankColors = ['#f59e0b', '#94a3b8', '#b45309', '#64748b', '#a3a3a3'];
+
+      document.getElementById('reportsContent').innerHTML = `
   <div class="kpi-grid">
     <div class="kpi-card gold">
       <div class="kpi-icon">💰</div>
-      <div class="kpi-val">${(totalRev/1000).toFixed(1)}K</div>
+      <div class="kpi-val">${(totalRev / 1000).toFixed(1)}K</div>
       <div class="kpi-label">إجمالي الإيرادات</div>
       <div class="kpi-sub">ج.م</div>
     </div>
@@ -1516,23 +2223,23 @@ function renderReports() {
       <div class="kpi-icon">🌙</div>
       <div class="kpi-val">${Math.round(totalNights)}</div>
       <div class="kpi-label">إجمالي الليالي</div>
-      <div class="kpi-sub">متوسط ${filtered.length?(totalNights/filtered.length).toFixed(1):0} ليلة/حجز</div>
+      <div class="kpi-sub">متوسط ${filtered.length ? (totalNights / filtered.length).toFixed(1) : 0} ليلة/حجز</div>
     </div>
     <div class="kpi-card purple">
       <div class="kpi-icon">📈</div>
-      <div class="kpi-val">${(avgRevPerB/1000).toFixed(1)}K</div>
+      <div class="kpi-val">${(avgRevPerB / 1000).toFixed(1)}K</div>
       <div class="kpi-label">متوسط الحجز</div>
       <div class="kpi-sub">ج.م</div>
     </div>
     <div class="kpi-card green">
       <div class="kpi-icon">✅</div>
-      <div class="kpi-val">${(totalDep/1000).toFixed(1)}K</div>
+      <div class="kpi-val">${(totalDep / 1000).toFixed(1)}K</div>
       <div class="kpi-label">محصّل</div>
       <div class="kpi-sub">ج.م</div>
     </div>
     <div class="kpi-card red">
       <div class="kpi-icon">⏳</div>
-      <div class="kpi-val">${(totalBal/1000).toFixed(1)}K</div>
+      <div class="kpi-val">${(totalBal / 1000).toFixed(1)}K</div>
       <div class="kpi-label">متبقي للتحصيل</div>
       <div class="kpi-sub">ج.م</div>
     </div>
@@ -1560,7 +2267,7 @@ function renderReports() {
     <div style="display:flex;align-items:center;gap:16px">
       <div class="canvas-wrap" style="height:220px;width:220px;flex-shrink:0"><canvas id="statusChart"></canvas></div>
       <div style="flex:1">
-        ${statusData.map(s=>`
+        ${statusData.map(s => `
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
           <div style="width:12px;height:12px;border-radius:3px;background:${s.bg};border:1px solid ${s.fg}44;flex-shrink:0"></div>
           <span style="font-size:12px;font-weight:700;flex:1">${s.label}</span>
@@ -1571,233 +2278,253 @@ function renderReports() {
   </div>` : ''}
   `;
 
-  ['revenueChart','occupancyChart','topRoomsChart','statusChart'].forEach(id => {
-    const existing = Chart.getChart(id);
-    if (existing) existing.destroy();
-  });
+      // Destroy old charts
+      ['revenueChart', 'occupancyChart', 'topRoomsChart', 'statusChart'].forEach(id => {
+        const existing = Chart.getChart(id);
+        if (existing) existing.destroy();
+      });
 
-  Chart.defaults.font.family = 'Cairo';
-  Chart.defaults.color = '#64748b';
+      Chart.defaults.font.family = 'Cairo';
+      Chart.defaults.color = '#64748b';
 
-  const revCtx = document.getElementById('revenueChart');
-  if (revCtx) {
-    new Chart(revCtx, {
-      type: 'bar',
-      data: {
-        labels: monthlyRev.map(m => m.label),
-        datasets: [{
-          label: 'الإيرادات (ج.م)',
-          data: monthlyRev.map(m => m.rev),
-          backgroundColor: monthlyRev.map(m => m.current ? '#c9a84c' : 'rgba(26,58,107,0.7)'),
-          borderColor:     monthlyRev.map(m => m.current ? '#e8c76a' : '#1a3a6b'),
-          borderWidth: 2,
-          borderRadius: 8,
-          borderSkipped: false,
-        }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          tooltip: { callbacks: { label: ctx => `  ${ctx.parsed.y.toLocaleString('ar-EG')} ج.م` } }
-        },
-        scales: {
-          y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { callback: v => (v/1000).toFixed(0)+'K' } },
-          x: { grid: { display: false } }
-        }
+      // ── Revenue Bar Chart ──
+      const revCtx = document.getElementById('revenueChart');
+      if (revCtx) {
+        new Chart(revCtx, {
+          type: 'bar',
+          data: {
+            labels: monthlyRev.map(m => m.label),
+            datasets: [{
+              label: 'الإيرادات (ج.م)',
+              data: monthlyRev.map(m => m.rev),
+              backgroundColor: monthlyRev.map(m => m.current ? '#c9a84c' : 'rgba(26,58,107,0.7)'),
+              borderColor: monthlyRev.map(m => m.current ? '#e8c76a' : '#1a3a6b'),
+              borderWidth: 2,
+              borderRadius: 8,
+              borderSkipped: false,
+            }]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: ctx => `  ${ctx.parsed.y.toLocaleString('ar-EG')} ج.م`
+                }
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                grid: { color: 'rgba(0,0,0,0.05)' },
+                ticks: { callback: v => (v / 1000).toFixed(0) + 'K' }
+              },
+              x: { grid: { display: false } }
+            }
+          }
+        });
       }
-    });
-  }
 
-  const occEntries = Object.entries(occByType).filter(([,v]) => v.count > 0);
-  const occCtx = document.getElementById('occupancyChart');
-  if (occCtx && occEntries.length) {
-    new Chart(occCtx, {
-      type: 'bar',
-      data: {
-        labels: occEntries.map(([rt]) => rt),
-        datasets: [{
-          label: 'نسبة الإشغال %',
-          data: occEntries.map(([,v]) => v.pct),
-          backgroundColor: occEntries.map(([rt]) => ROOM_TYPE_COLORS[rt] || '#2e7dd6'),
-          borderRadius: 6,
-          borderSkipped: false,
-        }]
-      },
-      options: {
-        indexAxis: 'y',
-        responsive: true, maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          tooltip: { callbacks: { label: ctx => `  ${ctx.parsed.x}%` } }
-        },
-        scales: {
-          x: { beginAtZero: true, max: 100, grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { callback: v => v+'%' } },
-          y: { grid: { display: false } }
-        }
+      // ── Occupancy Horizontal Bar ──
+      const occEntries = Object.entries(occByType).filter(([, v]) => v.count > 0);
+      const occCtx = document.getElementById('occupancyChart');
+      if (occCtx && occEntries.length) {
+        new Chart(occCtx, {
+          type: 'bar',
+          data: {
+            labels: occEntries.map(([rt]) => rt),
+            datasets: [{
+              label: 'نسبة الإشغال %',
+              data: occEntries.map(([, v]) => v.pct),
+              backgroundColor: occEntries.map(([rt]) => ROOM_TYPE_COLORS[rt] || '#2e7dd6'),
+              borderRadius: 6,
+              borderSkipped: false,
+            }]
+          },
+          options: {
+            indexAxis: 'y',
+            responsive: true, maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: { callbacks: { label: ctx => `  ${ctx.parsed.x}%` } }
+            },
+            scales: {
+              x: {
+                beginAtZero: true, max: 100,
+                grid: { color: 'rgba(0,0,0,0.05)' },
+                ticks: { callback: v => v + '%' }
+              },
+              y: { grid: { display: false } }
+            }
+          }
+        });
       }
-    });
-  }
 
-  const topCtx = document.getElementById('topRoomsChart');
-  if (topCtx && topRooms.length) {
-    new Chart(topCtx, {
-      type: 'bar',
-      data: {
-        labels: topRooms.map(([rno]) => 'غرفة ' + rno),
-        datasets: [{
-          label: 'الإيراد (ج.م)',
-          data: topRooms.map(([,rev]) => rev),
-          backgroundColor: ['#f59e0b','#94a3b8','#b45309','#64748b','#a3a3a3'],
-          borderRadius: 8,
-          borderSkipped: false,
-        }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          tooltip: { callbacks: { label: ctx => `  ${ctx.parsed.y.toLocaleString('ar-EG')} ج.م` } }
-        },
-        scales: {
-          y: { beginAtZero: true, ticks: { callback: v => (v/1000).toFixed(0)+'K' }, grid: { color: 'rgba(0,0,0,0.05)' } },
-          x: { grid: { display: false } }
-        }
+      // ── Top Rooms Bar ──
+      const topCtx = document.getElementById('topRoomsChart');
+      if (topCtx && topRooms.length) {
+        new Chart(topCtx, {
+          type: 'bar',
+          data: {
+            labels: topRooms.map(([rno]) => 'غرفة ' + rno),
+            datasets: [{
+              label: 'الإيراد (ج.م)',
+              data: topRooms.map(([, rev]) => rev),
+              backgroundColor: ['#f59e0b', '#94a3b8', '#b45309', '#64748b', '#a3a3a3'],
+              borderRadius: 8,
+              borderSkipped: false,
+            }]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: { callbacks: { label: ctx => `  ${ctx.parsed.y.toLocaleString('ar-EG')} ج.م` } }
+            },
+            scales: {
+              y: { beginAtZero: true, ticks: { callback: v => (v / 1000).toFixed(0) + 'K' }, grid: { color: 'rgba(0,0,0,0.05)' } },
+              x: { grid: { display: false } }
+            }
+          }
+        });
       }
-    });
-  }
 
-  const stCtx = document.getElementById('statusChart');
-  if (stCtx && statusData.length) {
-    new Chart(stCtx, {
-      type: 'doughnut',
-      data: {
-        labels: statusData.map(s => s.label),
-        datasets: [{
-          data: statusData.map(s => s.count),
-          backgroundColor: statusData.map(s => s.bg),
-          borderColor:     statusData.map(s => s.fg),
-          borderWidth: 2,
-          hoverOffset: 6,
-        }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        cutout: '65%',
-        plugins: {
-          legend: { display: false },
-          tooltip: { callbacks: { label: ctx => `  ${ctx.label}: ${ctx.parsed}` } }
-        }
+      // ── Status Doughnut ──
+      const stCtx = document.getElementById('statusChart');
+      if (stCtx && statusData.length) {
+        new Chart(stCtx, {
+          type: 'doughnut',
+          data: {
+            labels: statusData.map(s => s.label),
+            datasets: [{
+              data: statusData.map(s => s.count),
+              backgroundColor: statusData.map(s => s.bg),
+              borderColor: statusData.map(s => s.fg),
+              borderWidth: 2,
+              hoverOffset: 6,
+            }]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            cutout: '65%',
+            plugins: {
+              legend: { display: false },
+              tooltip: { callbacks: { label: ctx => `  ${ctx.label}: ${ctx.parsed}` } }
+            }
+          }
+        });
       }
-    });
-  }
-}
+    }
 
-// ═══════════════════════════════════════════
-// ROOMS
-// ═══════════════════════════════════════════
-let rooms = [];
+    // ═══════════════════════════════════════════
+    // ROOMS DATA & FUNCTIONS
+    // ═══════════════════════════════════════════
+    let rooms = [];
 
-const ROOM_TYPE_COLORS = {
-  "غرفة عادية":   "#2e7dd6",
-  "غرفة مزدوجة": "#16a34a",
-  "جناح صغير":   "#7c3aed",
-  "جناح كبير":   "#ea580c",
-  "جناح ملكي":   "#0d9488",
-};
+    const ROOM_TYPE_COLORS = {
+      "غرفة عادية": "#2e7dd6",
+      "غرفة مزدوجة": "#16a34a",
+      "جناح صغير": "#7c3aed",
+      "جناح كبير": "#ea580c",
+      "جناح ملكي": "#0d9488",
+    };
 
-const DEFAULT_PRICES = {
-  "غرفة عادية":   300,
-  "غرفة مزدوجة": 450,
-  "جناح صغير":   700,
-  "جناح كبير":   1000,
-  "جناح ملكي":   1500,
-};
+    const DEFAULT_PRICES = {
+      "غرفة عادية": 300,
+      "غرفة مزدوجة": 450,
+      "جناح صغير": 700,
+      "جناح كبير": 1000,
+      "جناح ملكي": 1500,
+    };
 
-async function loadRooms() {
-  const { data, error } = await sb.from('rooms').select('*').order('rno');
-  if (error) { console.error('rooms load error', error); return; }
-  rooms = data || [];
-  if (rooms.length === 0) await seedRooms();
-  const rt = document.getElementById('f-rtype')?.value;
-  if (rt) onRoomTypeChange();
-}
+    async function loadRooms() {
+      const { data, error } = await sb.from('rooms').select('*').order('rno');
+      if (error) { console.error('rooms load error', error); return; }
+      rooms = data || [];
+      if (rooms.length === 0) await seedRooms();
+      // Update booking form dropdowns if on add page
+      const rt = document.getElementById('f-rtype')?.value;
+      if (rt) onRoomTypeChange();
+    }
 
-async function seedRooms() {
-  const seed = [
-    { rno:"101", rtype:"غرفة عادية",   price:300,  capacity:"2 أشخاص", features:"سرير مزدوج، تلفاز، واي فاي، مكيف",            floor:"الأول",  status:"متاح" },
-    { rno:"102", rtype:"غرفة عادية",   price:300,  capacity:"2 أشخاص", features:"سرير مزدوج، تلفاز، واي فاي، مكيف",            floor:"الأول",  status:"متاح" },
-    { rno:"103", rtype:"غرفة عادية",   price:300,  capacity:"2 أشخاص", features:"سرير مزدوج، تلفاز، واي فاي، مكيف",            floor:"الأول",  status:"متاح" },
-    { rno:"104", rtype:"غرفة عادية",   price:320,  capacity:"2 أشخاص", features:"سرير مزدوج، تلفاز، واي فاي، مكيف، إطلالة",   floor:"الأول",  status:"متاح" },
-    { rno:"105", rtype:"غرفة عادية",   price:320,  capacity:"2 أشخاص", features:"سرير مزدوج، تلفاز، واي فاي، مكيف، إطلالة",   floor:"الأول",  status:"صيانة" },
-    { rno:"201", rtype:"غرفة مزدوجة", price:450,  capacity:"3 أشخاص", features:"سريرين، شرفة، تلفاز، واي فاي، ميني بار",      floor:"الثاني", status:"متاح" },
-    { rno:"202", rtype:"غرفة مزدوجة", price:450,  capacity:"3 أشخاص", features:"سريرين، شرفة، تلفاز، واي فاي، ميني بار",      floor:"الثاني", status:"متاح" },
-    { rno:"203", rtype:"غرفة مزدوجة", price:480,  capacity:"4 أشخاص", features:"سريرين، شرفة، تلفاز، واي فاي، ميني بار، جاكوزي", floor:"الثاني", status:"متاح" },
-    { rno:"204", rtype:"غرفة مزدوجة", price:480,  capacity:"4 أشخاص", features:"سريرين، شرفة، تلفاز، واي فاي، ميني بار، جاكوزي", floor:"الثاني", status:"متاح" },
-    { rno:"301", rtype:"جناح صغير",   price:700,  capacity:"4 أشخاص", features:"صالون، جاكوزي، خدمة غرف 24 ساعة، ميني بار",  floor:"الثالث", status:"متاح" },
-    { rno:"302", rtype:"جناح صغير",   price:700,  capacity:"4 أشخاص", features:"صالون، جاكوزي، خدمة غرف 24 ساعة، ميني بار",  floor:"الثالث", status:"متاح" },
-    { rno:"303", rtype:"جناح صغير",   price:750,  capacity:"4 أشخاص", features:"صالون، جاكوزي، خدمة غرف، ميني بار، إطلالة",  floor:"الثالث", status:"متاح" },
-    { rno:"401", rtype:"جناح كبير",   price:1000, capacity:"4 أشخاص", features:"غرفتان، مطبخ صغير، إطلالة بانورامية، جاكوزي", floor:"الرابع", status:"متاح" },
-    { rno:"402", rtype:"جناح كبير",   price:1100, capacity:"5 أشخاص", features:"غرفتان، مطبخ صغير، إطلالة، جاكوزي، باتلر",   floor:"الرابع", status:"متاح" },
-    { rno:"501", rtype:"جناح ملكي",   price:1500, capacity:"6 أشخاص", features:"3 غرف، مطبخ كامل، مسبح خاص، باتلر، إطلالة 360°", floor:"الخامس", status:"متاح" },
-  ];
-  const { error } = await sb.from('rooms').insert(seed);
-  if (!error) rooms = seed;
-}
+    async function seedRooms() {
+      const seed = [
+        { rno: "101", rtype: "غرفة عادية", price: 300, capacity: "2 أشخاص", features: "سرير مزدوج، تلفاز، واي فاي، مكيف", floor: "الأول", status: "متاح" },
+        { rno: "102", rtype: "غرفة عادية", price: 300, capacity: "2 أشخاص", features: "سرير مزدوج، تلفاز، واي فاي، مكيف", floor: "الأول", status: "متاح" },
+        { rno: "103", rtype: "غرفة عادية", price: 300, capacity: "2 أشخاص", features: "سرير مزدوج، تلفاز، واي فاي، مكيف", floor: "الأول", status: "متاح" },
+        { rno: "104", rtype: "غرفة عادية", price: 320, capacity: "2 أشخاص", features: "سرير مزدوج، تلفاز، واي فاي، مكيف، إطلالة", floor: "الأول", status: "متاح" },
+        { rno: "105", rtype: "غرفة عادية", price: 320, capacity: "2 أشخاص", features: "سرير مزدوج، تلفاز، واي فاي، مكيف، إطلالة", floor: "الأول", status: "صيانة" },
+        { rno: "201", rtype: "غرفة مزدوجة", price: 450, capacity: "3 أشخاص", features: "سريرين، شرفة، تلفاز، واي فاي، ميني بار", floor: "الثاني", status: "متاح" },
+        { rno: "202", rtype: "غرفة مزدوجة", price: 450, capacity: "3 أشخاص", features: "سريرين، شرفة، تلفاز، واي فاي، ميني بار", floor: "الثاني", status: "متاح" },
+        { rno: "203", rtype: "غرفة مزدوجة", price: 480, capacity: "4 أشخاص", features: "سريرين، شرفة، تلفاز، واي فاي، ميني بار، جاكوزي", floor: "الثاني", status: "متاح" },
+        { rno: "204", rtype: "غرفة مزدوجة", price: 480, capacity: "4 أشخاص", features: "سريرين، شرفة، تلفاز، واي فاي، ميني بار، جاكوزي", floor: "الثاني", status: "متاح" },
+        { rno: "301", rtype: "جناح صغير", price: 700, capacity: "4 أشخاص", features: "صالون، جاكوزي، خدمة غرف 24 ساعة، ميني بار", floor: "الثالث", status: "متاح" },
+        { rno: "302", rtype: "جناح صغير", price: 700, capacity: "4 أشخاص", features: "صالون، جاكوزي، خدمة غرف 24 ساعة، ميني بار", floor: "الثالث", status: "متاح" },
+        { rno: "303", rtype: "جناح صغير", price: 750, capacity: "4 أشخاص", features: "صالون، جاكوزي، خدمة غرف، ميني بار، إطلالة", floor: "الثالث", status: "متاح" },
+        { rno: "401", rtype: "جناح كبير", price: 1000, capacity: "4 أشخاص", features: "غرفتان، مطبخ صغير، إطلالة بانورامية، جاكوزي", floor: "الرابع", status: "متاح" },
+        { rno: "402", rtype: "جناح كبير", price: 1100, capacity: "5 أشخاص", features: "غرفتان، مطبخ صغير، إطلالة، جاكوزي، باتلر", floor: "الرابع", status: "متاح" },
+        { rno: "501", rtype: "جناح ملكي", price: 1500, capacity: "6 أشخاص", features: "3 غرف، مطبخ كامل، مسبح خاص، باتلر، إطلالة 360°", floor: "الخامس", status: "متاح" },
+      ];
+      const { error } = await sb.from('rooms').insert(seed);
+      if (!error) rooms = seed;
+    }
 
-function subscribeRoomsRealtime() {
-  sb.channel('rooms-changes')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'rooms' }, payload => {
-      const { eventType, new: nr, old: or } = payload;
-      if (eventType === 'INSERT') {
-        if (!rooms.find(r => r.rno === nr.rno)) rooms.push(nr);
-      } else if (eventType === 'UPDATE') {
-        const idx = rooms.findIndex(r => r.id === nr.id);
-        if (idx !== -1) rooms[idx] = nr; else rooms.push(nr);
-      } else if (eventType === 'DELETE') {
-        rooms = rooms.filter(r => r.id !== or.id);
+    // Realtime for rooms table
+    function subscribeRoomsRealtime() {
+      sb.channel('rooms-changes')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'rooms' }, payload => {
+          const { eventType, new: nr, old: or } = payload;
+          if (eventType === 'INSERT') {
+            if (!rooms.find(r => r.rno === nr.rno)) rooms.push(nr);
+          } else if (eventType === 'UPDATE') {
+            const idx = rooms.findIndex(r => r.id === nr.id);
+            if (idx !== -1) rooms[idx] = nr; else rooms.push(nr);
+          } else if (eventType === 'DELETE') {
+            rooms = rooms.filter(r => r.id !== or.id);
+          }
+          if (document.querySelector('#page-rooms.active')) renderRooms();
+        })
+        .subscribe();
+    }
+
+    function renderRooms() {
+      const el = document.getElementById('roomsList');
+      if (!rooms.length) {
+        el.innerHTML = '<div class="empty-state"><div class="es-icon">🛏️</div><p>لا توجد غرف — اضغط إضافة غرفة</p></div>';
+        return;
       }
-      if (document.querySelector('#page-rooms.active')) renderRooms();
-    })
-    .subscribe();
-}
 
-function renderRooms() {
-  const el = document.getElementById('roomsList');
-  if (!rooms.length) {
-    el.innerHTML = '<div class="empty-state"><div class="es-icon">🛏️</div><p>لا توجد غرف — اضغط إضافة غرفة</p></div>';
-    return;
-  }
+      // Group by type
+      const grouped = {};
+      rooms.forEach(r => {
+        if (!grouped[r.rtype]) grouped[r.rtype] = [];
+        grouped[r.rtype].push(r);
+      });
 
-  const grouped = {};
-  rooms.forEach(r => {
-    if (!grouped[r.rtype]) grouped[r.rtype] = [];
-    grouped[r.rtype].push(r);
-  });
+      const statusStyle = {
+        "متاح": { bg: "#dcfce7", fg: "#166534", label: "متاح ✅" },
+        "صيانة": { bg: "#fef9c3", fg: "#854d0e", label: "صيانة 🔧" },
+        "محجوز": { bg: "#fee2e2", fg: "#991b1b", label: "محجوز 🔴" },
+      };
 
-  const statusStyle = {
-    "متاح":   { bg:"#dcfce7", fg:"#166534", label:"متاح ✅" },
-    "صيانة":  { bg:"#fef9c3", fg:"#854d0e", label:"صيانة 🔧" },
-    "محجوز":  { bg:"#fee2e2", fg:"#991b1b", label:"محجوز 🔴" },
-  };
+      let html = '';
+      for (const rtype of ROOM_TYPES_ORDER) {
+        const typeRooms = grouped[rtype];
+        if (!typeRooms?.length) continue;
+        const color = ROOM_TYPE_COLORS[rtype] || '#2e7dd6';
+        const avgPrice = Math.round(typeRooms.reduce((s, r) => s + Number(r.price), 0) / typeRooms.length);
 
-  let html = '';
-  for (const rtype of ROOM_TYPES_ORDER) {
-    const typeRooms = grouped[rtype];
-    if (!typeRooms?.length) continue;
-    const color = ROOM_TYPE_COLORS[rtype] || '#2e7dd6';
-    const avgPrice = Math.round(typeRooms.reduce((s,r) => s + Number(r.price), 0) / typeRooms.length);
-
-    html += `<div style="background:linear-gradient(90deg,${color},${color}cc);border-radius:12px 12px 0 0;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
+        html += `<div style="background:linear-gradient(90deg,${color},${color}cc);border-radius:12px 12px 0 0;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
       <span style="color:#fff;font-size:13px;font-weight:800">🏠 ${rtype}</span>
       <span style="color:rgba(255,255,255,0.85);font-size:11px;font-weight:600">${typeRooms.length} غرفة • متوسط ${avgPrice.toLocaleString()} ج.م</span>
     </div>
     <div style="background:#fff;border-radius:0 0 12px 12px;margin-bottom:14px;overflow:hidden;box-shadow:var(--shadow);">`;
 
-    typeRooms.sort((a,b) => a.rno.localeCompare(b.rno)).forEach((r, i) => {
-      const st = statusStyle[r.status] || statusStyle['متاح'];
-      const isLast = i === typeRooms.length - 1;
-      html += `<div style="padding:14px;${!isLast ? 'border-bottom:1px solid var(--border)' : ''};display:flex;align-items:flex-start;gap:12px;">
+        typeRooms.sort((a, b) => a.rno.localeCompare(b.rno)).forEach((r, i) => {
+          const st = statusStyle[r.status] || statusStyle['متاح'];
+          const isLast = i === typeRooms.length - 1;
+          html += `<div style="padding:14px;${!isLast ? 'border-bottom:1px solid var(--border)' : ''};display:flex;align-items:flex-start;gap:12px;">
         <div style="background:${color}18;color:${color};border-radius:10px;padding:8px 12px;font-size:18px;font-weight:900;min-width:52px;text-align:center;line-height:1.1;">
           <div>${r.rno}</div>
           <div style="font-size:9px;font-weight:600;opacity:0.7">${r.floor || ''}</div>
@@ -1816,98 +2543,99 @@ function renderRooms() {
           </div>
         </div>
       </div>`;
+        });
+        html += '</div>';
+      }
+      el.innerHTML = html;
+    }
+
+    function openRoomForm(roomId) {
+      const r = roomId ? rooms.find(x => x.id === roomId) : null;
+      document.getElementById('roomModalTitle').textContent = r ? '✏️ تعديل الغرفة' : '🛏️ إضافة غرفة جديدة';
+      document.getElementById('rf-id').value = r?.id || '';
+      document.getElementById('rf-rno').value = r?.rno || '';
+      document.getElementById('rf-floor').value = r?.floor || '';
+      document.getElementById('rf-rtype').value = r?.rtype || '';
+      document.getElementById('rf-price').value = r?.price || '';
+      document.getElementById('rf-capacity').value = r?.capacity || '';
+      document.getElementById('rf-features').value = r?.features || '';
+      document.getElementById('rf-status').value = r?.status || 'متاح';
+      if (!r?.rtype) onRoomTypeSelect();
+      document.getElementById('roomModal').classList.add('open');
+    }
+
+    function onRoomTypeSelect() {
+      const rt = document.getElementById('rf-rtype').value;
+      const priceEl = document.getElementById('rf-price');
+      if (rt && DEFAULT_PRICES[rt] && !priceEl.value) {
+        priceEl.value = DEFAULT_PRICES[rt];
+      }
+    }
+
+    function closeRoomModal() {
+      document.getElementById('roomModal').classList.remove('open');
+    }
+
+    async function saveRoom() {
+      const id = document.getElementById('rf-id').value;
+      const rno = document.getElementById('rf-rno').value.trim();
+      const floor = document.getElementById('rf-floor').value.trim();
+      const rtype = document.getElementById('rf-rtype').value;
+      const price = parseFloat(document.getElementById('rf-price').value) || 0;
+      const capacity = document.getElementById('rf-capacity').value.trim();
+      const features = document.getElementById('rf-features').value.trim();
+      const status = document.getElementById('rf-status').value;
+
+      if (!rno || !rtype || !price) {
+        showToast('⚠️ رقم الغرفة والنوع والسعر مطلوبين');
+        return;
+      }
+
+      const entry = { rno, floor, rtype, price, capacity, features, status };
+
+      if (id) {
+        const { error } = await sb.from('rooms').update(entry).eq('id', id);
+        if (error) { showToast('❌ خطأ: ' + error.message); return; }
+        const idx = rooms.findIndex(r => r.id == id);
+        if (idx !== -1) rooms[idx] = { ...rooms[idx], ...entry };
+        showToast('✅ تم تحديث الغرفة');
+      } else {
+        const { data, error } = await sb.from('rooms').insert(entry).select().single();
+        if (error) { showToast('❌ خطأ: ' + error.message); return; }
+        rooms.push(data);
+        showToast('✅ تم إضافة الغرفة');
+      }
+
+      closeRoomModal();
+      renderRooms();
+    }
+
+    async function deleteRoom(id, rno) {
+      if (!confirm(`هل تريد حذف غرفة ${rno}؟`)) return;
+      const { error } = await sb.from('rooms').delete().eq('id', id);
+      if (error) { showToast('❌ خطأ في الحذف'); return; }
+      rooms = rooms.filter(r => r.id !== id);
+      renderRooms();
+      showToast(`🗑️ تم حذف غرفة ${rno}`);
+    }
+
+    function bookThisRoom(rno, rtype) {
+      editingId = null;
+      document.getElementById('f-rtype').value = rtype;
+      onRoomTypeChange();
+      setTimeout(() => { document.getElementById('f-rno').value = rno; calcNights(); }, 50);
+      showPage('add', document.querySelectorAll('.nav-btn')[2]);
+    }
+
+    document.getElementById('roomModal').addEventListener('click', function (e) {
+      if (e.target === this) closeRoomModal();
     });
-    html += '</div>';
-  }
-  el.innerHTML = html;
-}
 
-function openRoomForm(roomId) {
-  const r = roomId ? rooms.find(x => x.id === roomId) : null;
-  document.getElementById('roomModalTitle').textContent = r ? '✏️ تعديل الغرفة' : '🛏️ إضافة غرفة جديدة';
-  document.getElementById('rf-id').value       = r?.id || '';
-  document.getElementById('rf-rno').value      = r?.rno || '';
-  document.getElementById('rf-floor').value    = r?.floor || '';
-  document.getElementById('rf-rtype').value    = r?.rtype || '';
-  document.getElementById('rf-price').value    = r?.price || '';
-  document.getElementById('rf-capacity').value = r?.capacity || '';
-  document.getElementById('rf-features').value = r?.features || '';
-  document.getElementById('rf-status').value   = r?.status || 'متاح';
-  if (!r?.rtype) onRoomTypeSelect();
-  document.getElementById('roomModal').classList.add('open');
-}
-
-function onRoomTypeSelect() {
-  const rt = document.getElementById('rf-rtype').value;
-  const priceEl = document.getElementById('rf-price');
-  if (rt && DEFAULT_PRICES[rt] && !priceEl.value) {
-    priceEl.value = DEFAULT_PRICES[rt];
-  }
-}
-
-function closeRoomModal() {
-  document.getElementById('roomModal').classList.remove('open');
-}
-
-async function saveRoom() {
-  const id       = document.getElementById('rf-id').value;
-  const rno      = document.getElementById('rf-rno').value.trim();
-  const floor    = document.getElementById('rf-floor').value.trim();
-  const rtype    = document.getElementById('rf-rtype').value;
-  const price    = parseFloat(document.getElementById('rf-price').value) || 0;
-  const capacity = document.getElementById('rf-capacity').value.trim();
-  const features = document.getElementById('rf-features').value.trim();
-  const status   = document.getElementById('rf-status').value;
-
-  if (!rno || !rtype || !price) {
-    showToast('⚠️ رقم الغرفة والنوع والسعر مطلوبين');
-    return;
-  }
-
-  const entry = { rno, floor, rtype, price, capacity, features, status };
-
-  if (id) {
-    const { error } = await sb.from('rooms').update(entry).eq('id', id);
-    if (error) { showToast('❌ خطأ: ' + error.message); return; }
-    const idx = rooms.findIndex(r => r.id == id);
-    if (idx !== -1) rooms[idx] = { ...rooms[idx], ...entry };
-    showToast('✅ تم تحديث الغرفة');
-  } else {
-    const { data, error } = await sb.from('rooms').insert(entry).select().single();
-    if (error) { showToast('❌ خطأ: ' + error.message); return; }
-    rooms.push(data);
-    showToast('✅ تم إضافة الغرفة');
-  }
-
-  closeRoomModal();
-  renderRooms();
-}
-
-async function deleteRoom(id, rno) {
-  if (!confirm(`هل تريد حذف غرفة ${rno}؟`)) return;
-  const { error } = await sb.from('rooms').delete().eq('id', id);
-  if (error) { showToast('❌ خطأ في الحذف'); return; }
-  rooms = rooms.filter(r => r.id !== id);
-  renderRooms();
-  showToast(`🗑️ تم حذف غرفة ${rno}`);
-}
-
-function bookThisRoom(rno, rtype) {
-  editingId = null;
-  document.getElementById('f-rtype').value = rtype;
-  onRoomTypeChange();
-  setTimeout(() => { document.getElementById('f-rno').value = rno; calcNights(); }, 50);
-  showPage('add', document.querySelectorAll('.nav-btn')[2]);
-}
-
-document.getElementById('roomModal').addEventListener('click', function(e) {
-  if (e.target === this) closeRoomModal();
-});
-
-// ═══════════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════════
-checkAuth();
-</script>
+    // ═══════════════════════════════════════════
+    // INIT — Check Auth first
+    // ═══════════════════════════════════════════
+    checkAuth();
+  </script>
 </body>
+
 </html>
